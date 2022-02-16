@@ -19,7 +19,7 @@ type RespondData struct {
 	Msg       string  `json:"msg"`
 }
 
-func Login(c *gin.Context) {
+func LoginXX(c *gin.Context) {
 	password := c.Param("password")
 	username := c.Param("username")
 	fmt.Println(username)

@@ -2,13 +2,14 @@ package initialize
 
 import (
 	"evernote-client/global"
+	"evernote-client/initialize/internal"
 	"evernote-client/model"
+	"os"
 
 	"go.uber.org/zap"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
-	"gorm.io/gorm/schema"
 )
 
 //@author: SliverHorn
@@ -17,12 +18,7 @@ import (
 //@return: *gorm.DB
 
 func Gorm() *gorm.DB {
-	switch global.GVA_CONFIG.System.DbType {
-	case "mysql":
-		return GormMysql()
-	default:
-		return GormMysql()
-	}
+	return GormMysql()
 }
 
 //@function: MysqlTables
@@ -30,14 +26,15 @@ func Gorm() *gorm.DB {
 //@param: db *gorm.DB
 
 func MysqlTables(db *gorm.DB) {
-	err := db.AutoMigrate(
+	err := db.Set("gorm:table_options", "ENGINE=InnoDB").AutoMigrate(
 		model.SysUser{},
+		model.JwtBlacklist{},
 	)
 	if err != nil {
-		global.ZAP_LOG.Error("register table failed", zap.Any("err", err))
+		global.SYS_LOG.Error("register table failed", zap.Any("err", err))
 		os.Exit(0)
 	}
-	global.ZAP_LOG.Info("register table success")
+	global.SYS_LOG.Info("register table success")
 }
 
 //@function: GormMysql
@@ -45,7 +42,7 @@ func MysqlTables(db *gorm.DB) {
 //@return: *gorm.DB
 
 func GormMysql() *gorm.DB {
-	m := global.GVA_CONFIG.Mysql
+	m := global.SYS_CONFIG.Mysql
 	if m.Dbname == "" {
 		return nil
 	}
@@ -59,7 +56,7 @@ func GormMysql() *gorm.DB {
 		SkipInitializeWithVersion: false, // 根据版本自动配置
 	}
 	if db, err := gorm.Open(mysql.New(mysqlConfig), gormConfig()); err != nil {
-		//global.ZAP_LOG.Error("MySQL启动异常", zap.Any("err", err))
+		//global.SYS_LOG.Error("MySQL启动异常", zap.Any("err", err))
 		return nil
 	} else {
 		sqlDB, _ := db.DB()
@@ -77,7 +74,7 @@ func GormMysql() *gorm.DB {
 
 func gormConfig() *gorm.Config {
 	config := &gorm.Config{DisableForeignKeyConstraintWhenMigrating: true}
-	switch global.GVA_CONFIG.Mysql.LogMode {
+	switch global.SYS_CONFIG.Mysql.LogMode {
 	case "silent", "Silent":
 		config.Logger = internal.Default.LogMode(logger.Silent)
 	case "error", "Error":

@@ -1,0 +1,117 @@
+[EVERNOTE]2022/02/16 - 11:23:44.857	[34minfo[0m	register table success
+[EVERNOTE]2022/02/16 - 14:45:40.002	[34minfo[0m	register table success
+[EVERNOTE]2022/02/16 - 14:45:40.004	[34minfo[0m	use middleware logger
+[EVERNOTE]2022/02/16 - 14:45:40.004	[34minfo[0m	use middleware cors
+[EVERNOTE]2022/02/16 - 14:45:40.004	[34minfo[0m	register swagger handler
+[EVERNOTE]2022/02/16 - 14:45:40.004	[34minfo[0m	router register success
+[EVERNOTE]2022/02/16 - 14:45:40.005	[34minfo[0m	server run success on 	{"address": ":8888"}
+[EVERNOTE]2022/02/16 - 14:47:30.700	[34minfo[0m	register table success
+[EVERNOTE]2022/02/16 - 14:47:30.701	[34minfo[0m	use middleware logger
+[EVERNOTE]2022/02/16 - 14:47:30.701	[34minfo[0m	use middleware cors
+[EVERNOTE]2022/02/16 - 14:47:30.701	[34minfo[0m	register swagger handler
+[EVERNOTE]2022/02/16 - 14:47:30.701	[34minfo[0m	router register success
+[EVERNOTE]2022/02/16 - 14:47:30.714	[34minfo[0m	server run success on 	{"address": ":8888"}
+[EVERNOTE]2022/02/16 - 14:52:57.750	[34minfo[0m	register table success
+[EVERNOTE]2022/02/16 - 14:52:57.751	[34minfo[0m	use middleware logger
+[EVERNOTE]2022/02/16 - 14:52:57.751	[34minfo[0m	use middleware cors
+[EVERNOTE]2022/02/16 - 14:52:57.751	[34minfo[0m	register swagger handler
+[EVERNOTE]2022/02/16 - 14:52:57.751	[34minfo[0m	router register success
+[EVERNOTE]2022/02/16 - 14:52:57.752	[34minfo[0m	server run success on 	{"address": ":8888"}
+[EVERNOTE]2022/02/16 - 15:36:22.559	[34minfo[0m	register table success
+[EVERNOTE]2022/02/16 - 15:36:22.559	[34minfo[0m	use middleware logger
+[EVERNOTE]2022/02/16 - 15:36:22.559	[34minfo[0m	use middleware cors
+[EVERNOTE]2022/02/16 - 15:36:22.560	[34minfo[0m	register swagger handler
+[EVERNOTE]2022/02/16 - 15:36:22.560	[34minfo[0m	router register success
+[EVERNOTE]2022/02/16 - 15:36:22.560	[34minfo[0m	server run success on 	{"address": ":8888"}
+[EVERNOTE]2022/02/16 - 15:49:06.501	[34minfo[0m	register table success
+[EVERNOTE]2022/02/16 - 15:49:06.502	[34minfo[0m	use middleware logger
+[EVERNOTE]2022/02/16 - 15:49:06.502	[34minfo[0m	use middleware cors
+[EVERNOTE]2022/02/16 - 15:49:06.502	[34minfo[0m	register swagger handler
+[EVERNOTE]2022/02/16 - 15:49:06.502	[34minfo[0m	router register success
+[EVERNOTE]2022/02/16 - 15:49:06.509	[34minfo[0m	server run success on 	{"address": ":8888"}
+[EVERNOTE]2022/02/16 - 15:49:09.133	[31merror[0m	登陆失败! 用户名不存在或者密码错误!	{"err": "record not found"}
+[EVERNOTE]2022/02/16 - 15:56:16.504	[31merror[0m	登陆失败! 用户名不存在或者密码错误!	{"err": "Authority: unsupported relations for schema SysUser"}
+[EVERNOTE]2022/02/16 - 16:02:26.822	[34minfo[0m	register table success
+[EVERNOTE]2022/02/16 - 16:02:26.823	[34minfo[0m	use middleware logger
+[EVERNOTE]2022/02/16 - 16:02:26.823	[34minfo[0m	use middleware cors
+[EVERNOTE]2022/02/16 - 16:02:26.823	[34minfo[0m	register swagger handler
+[EVERNOTE]2022/02/16 - 16:02:26.823	[34minfo[0m	router register success
+[EVERNOTE]2022/02/16 - 16:02:26.824	[34minfo[0m	server run success on 	{"address": ":8888"}
+[EVERNOTE]2022/02/16 - 16:16:37.279	[34minfo[0m	register table success
+[EVERNOTE]2022/02/16 - 16:16:37.279	[34minfo[0m	use middleware logger
+[EVERNOTE]2022/02/16 - 16:16:37.280	[34minfo[0m	use middleware cors
+[EVERNOTE]2022/02/16 - 16:16:37.280	[34minfo[0m	register swagger handler
+[EVERNOTE]2022/02/16 - 16:16:37.280	[34minfo[0m	router register success
+[EVERNOTE]2022/02/16 - 16:16:37.289	[34minfo[0m	server run success on 	{"address": ":8888"}
+[EVERNOTE]2022/02/16 - 17:21:42.726	[34minfo[0m	register table success
+[EVERNOTE]2022/02/16 - 17:21:42.726	[34minfo[0m	use middleware logger
+[EVERNOTE]2022/02/16 - 17:21:42.727	[34minfo[0m	use middleware cors
+[EVERNOTE]2022/02/16 - 17:21:42.727	[34minfo[0m	register swagger handler
+[EVERNOTE]2022/02/16 - 17:21:42.727	[34minfo[0m	router register success
+[EVERNOTE]2022/02/16 - 17:21:42.729	[34minfo[0m	server run success on 	{"address": ":8888"}
+[EVERNOTE]2022/02/16 - 17:21:51.006	[34minfo[0m	register table success
+[EVERNOTE]2022/02/16 - 17:21:51.007	[34minfo[0m	use middleware logger
+[EVERNOTE]2022/02/16 - 17:21:51.007	[34minfo[0m	use middleware cors
+[EVERNOTE]2022/02/16 - 17:21:51.007	[34minfo[0m	register swagger handler
+[EVERNOTE]2022/02/16 - 17:21:51.007	[34minfo[0m	router register success
+[EVERNOTE]2022/02/16 - 17:21:51.008	[34minfo[0m	server run success on 	{"address": ":8888"}
+[EVERNOTE]2022/02/16 - 17:23:02.285	[34minfo[0m	register table success
+[EVERNOTE]2022/02/16 - 17:23:02.286	[34minfo[0m	use middleware logger
+[EVERNOTE]2022/02/16 - 17:23:02.286	[34minfo[0m	use middleware cors
+[EVERNOTE]2022/02/16 - 17:23:02.287	[34minfo[0m	register swagger handler
+[EVERNOTE]2022/02/16 - 17:23:02.287	[34minfo[0m	router register success
+[EVERNOTE]2022/02/16 - 17:23:02.288	[34minfo[0m	server run success on 	{"address": ":8888"}
+[EVERNOTE]2022/02/16 - 17:26:23.051	[34minfo[0m	register table success
+[EVERNOTE]2022/02/16 - 17:26:23.052	[34minfo[0m	use middleware logger
+[EVERNOTE]2022/02/16 - 17:26:23.052	[34minfo[0m	use middleware cors
+[EVERNOTE]2022/02/16 - 17:26:23.052	[34minfo[0m	register swagger handler
+[EVERNOTE]2022/02/16 - 17:26:23.052	[34minfo[0m	router register success
+[EVERNOTE]2022/02/16 - 17:26:23.057	[34minfo[0m	server run success on 	{"address": ":8888"}
+[EVERNOTE]2022/02/16 - 17:26:47.134	[34minfo[0m	register table success
+[EVERNOTE]2022/02/16 - 17:26:47.135	[34minfo[0m	use middleware logger
+[EVERNOTE]2022/02/16 - 17:26:47.135	[34minfo[0m	use middleware cors
+[EVERNOTE]2022/02/16 - 17:26:47.135	[34minfo[0m	register swagger handler
+[EVERNOTE]2022/02/16 - 17:26:47.135	[34minfo[0m	router register success
+[EVERNOTE]2022/02/16 - 17:26:47.136	[34minfo[0m	server run success on 	{"address": ":8888"}
+[EVERNOTE]2022/02/16 - 17:27:22.276	[34minfo[0m	register table success
+[EVERNOTE]2022/02/16 - 17:27:22.277	[34minfo[0m	use middleware logger
+[EVERNOTE]2022/02/16 - 17:27:22.278	[34minfo[0m	use middleware cors
+[EVERNOTE]2022/02/16 - 17:27:22.278	[34minfo[0m	register swagger handler
+[EVERNOTE]2022/02/16 - 17:27:22.278	[34minfo[0m	router register success
+[EVERNOTE]2022/02/16 - 17:27:22.281	[34minfo[0m	server run success on 	{"address": ":8888"}
+[EVERNOTE]2022/02/16 - 18:53:45.362	[34minfo[0m	register table success
+[EVERNOTE]2022/02/16 - 18:53:45.363	[34minfo[0m	use middleware logger
+[EVERNOTE]2022/02/16 - 18:53:45.363	[34minfo[0m	use middleware cors
+[EVERNOTE]2022/02/16 - 18:53:45.363	[34minfo[0m	register swagger handler
+[EVERNOTE]2022/02/16 - 18:53:45.363	[34minfo[0m	router register success
+[EVERNOTE]2022/02/16 - 18:53:45.375	[34minfo[0m	server run success on 	{"address": ":8888"}
+[EVERNOTE]2022/02/16 - 18:55:15.877	[34minfo[0m	register table success
+[EVERNOTE]2022/02/16 - 18:55:15.878	[34minfo[0m	use middleware logger
+[EVERNOTE]2022/02/16 - 18:55:15.878	[34minfo[0m	use middleware cors
+[EVERNOTE]2022/02/16 - 18:55:15.878	[34minfo[0m	register swagger handler
+[EVERNOTE]2022/02/16 - 18:55:15.878	[34minfo[0m	router register success
+[EVERNOTE]2022/02/16 - 18:55:15.882	[34minfo[0m	server run success on 	{"address": ":8888"}
+[EVERNOTE]2022/02/16 - 19:20:11.022	[34minfo[0m	register table success
+[EVERNOTE]2022/02/16 - 19:20:11.023	[34minfo[0m	use middleware logger
+[EVERNOTE]2022/02/16 - 19:20:11.023	[34minfo[0m	use middleware cors
+[EVERNOTE]2022/02/16 - 19:20:11.024	[34minfo[0m	register swagger handler
+[EVERNOTE]2022/02/16 - 19:20:11.024	[34minfo[0m	router register success
+[EVERNOTE]2022/02/16 - 19:20:11.037	[34minfo[0m	server run success on 	{"address": ":8888"}
+[EVERNOTE]2022/02/16 - 19:24:32.076	[34minfo[0m	register table success
+[EVERNOTE]2022/02/16 - 19:24:32.077	[34minfo[0m	use middleware logger
+[EVERNOTE]2022/02/16 - 19:24:32.077	[34minfo[0m	use middleware cors
+[EVERNOTE]2022/02/16 - 19:24:32.078	[34minfo[0m	register swagger handler
+[EVERNOTE]2022/02/16 - 19:24:32.078	[34minfo[0m	router register success
+[EVERNOTE]2022/02/16 - 19:24:32.089	[34minfo[0m	server run success on 	{"address": ":8888"}
+[EVERNOTE]2022/02/16 - 19:25:50.701	[34minfo[0m	register table success
+[EVERNOTE]2022/02/16 - 19:25:50.702	[34minfo[0m	use middleware logger
+[EVERNOTE]2022/02/16 - 19:25:50.702	[34minfo[0m	use middleware cors
+[EVERNOTE]2022/02/16 - 19:25:50.702	[34minfo[0m	register swagger handler
+[EVERNOTE]2022/02/16 - 19:25:50.702	[34minfo[0m	router register success
+[EVERNOTE]2022/02/16 - 19:25:50.709	[34minfo[0m	server run success on 	{"address": ":8888"}
+[EVERNOTE]2022/02/16 - 19:28:15.370	[34minfo[0m	register table success
+[EVERNOTE]2022/02/16 - 19:28:15.371	[34minfo[0m	use middleware logger
+[EVERNOTE]2022/02/16 - 19:28:15.371	[34minfo[0m	use middleware cors
+[EVERNOTE]2022/02/16 - 19:28:15.371	[34minfo[0m	register swagger handler
+[EVERNOTE]2022/02/16 - 19:28:15.371	[34minfo[0m	router register success
+[EVERNOTE]2022/02/16 - 19:28:15.372	[34minfo[0m	server run success on 	{"address": ":8888"}

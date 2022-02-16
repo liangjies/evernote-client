@@ -1,0 +1,40 @@
+system:
+  env: public
+  addr: 8888
+  db-type: mysql
+  oss-type: local
+  use-multipoint: false
+  
+mysql:
+  path: 127.0.0.1:3306
+  config: charset=utf8mb4&parseTime=True&loc=Local
+  db-name: evernote
+  username: evernote
+  password: 3a7IIDMEQK16
+  max-idle-conns: 0
+  max-open-conns: 0
+  log-mode: "info"
+  log-zap: false
+  
+zap:
+  level: info
+  format: console
+  prefix: '[EVERNOTE]'
+  director: log
+  link-name: latest_log
+  showLine: true
+  encode-level: LowercaseColorLevelEncoder
+  stacktrace-key: stacktrace
+  log-in-console: true
+redis:
+  db: 0
+  addr: 127.0.0.1:6379
+  password: ""
+
+casbin:
+  model-path: ./resource/rbac_model.conf
+
+jwt:
+  signing-key: qmtPlus
+  expires-time: 604800
+  buffer-time: 86400
