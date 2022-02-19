@@ -37,7 +37,9 @@ func GetAuth(c *gin.Context) {
 	auth.Data = User{"liangjies"}
 	_ = auth
 	//response.FailWithMessage("设置登录状态失败", c)
-	//c.JSON(200, auth)
+	response.OkWithDetailed(response.PageResult{
+		List: "liangjies",
+	}, "获取成功", c)
 }
 
 // @Tags Base

@@ -29,6 +29,7 @@ func MysqlTables(db *gorm.DB) {
 	err := db.Set("gorm:table_options", "ENGINE=InnoDB").AutoMigrate(
 		model.SysUser{},
 		model.JwtBlacklist{},
+		model.SysOperationRecord{},
 	)
 	if err != nil {
 		global.SYS_LOG.Error("register table failed", zap.Any("err", err))
