@@ -30,6 +30,8 @@ func MysqlTables(db *gorm.DB) {
 		model.SysUser{},
 		model.JwtBlacklist{},
 		model.SysOperationRecord{},
+		model.EvnNote{},
+		model.EvnNotebook{},
 	)
 	if err != nil {
 		global.SYS_LOG.Error("register table failed", zap.Any("err", err))

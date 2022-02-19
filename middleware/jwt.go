@@ -67,7 +67,7 @@ func JWTAuth() gin.HandlerFunc {
 			}
 		}
 		c.Set("claims", claims)
-		//c.Next()
+		c.Next()
 	}
 }
 

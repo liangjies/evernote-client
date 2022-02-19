@@ -39,6 +39,7 @@ func GetAuth(c *gin.Context) {
 	//response.FailWithMessage("设置登录状态失败", c)
 	response.OkWithDetailed(response.PageResult{
 		List: "liangjies",
+		Page: int(getUserID(c)),
 	}, "获取成功", c)
 }
 

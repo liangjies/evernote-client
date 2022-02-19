@@ -115,3 +115,30 @@
 [EVERNOTE]2022/02/16 - 19:28:15.371	[34minfo[0m	register swagger handler
 [EVERNOTE]2022/02/16 - 19:28:15.371	[34minfo[0m	router register success
 [EVERNOTE]2022/02/16 - 19:28:15.372	[34minfo[0m	server run success on 	{"address": ":8888"}
+[EVERNOTE]2022/02/16 - 19:55:20.202	[34minfo[0m	register table success
+[EVERNOTE]2022/02/16 - 19:55:20.203	[34minfo[0m	use middleware logger
+[EVERNOTE]2022/02/16 - 19:55:20.203	[34minfo[0m	use middleware cors
+[EVERNOTE]2022/02/16 - 19:55:20.203	[34minfo[0m	register swagger handler
+[EVERNOTE]2022/02/16 - 19:55:20.203	[34minfo[0m	router register success
+[EVERNOTE]2022/02/16 - 19:55:20.213	[34minfo[0m	server run success on 	{"address": ":8888"}
+[EVERNOTE]2022/02/16 - 22:58:21.885	[34minfo[0m	register table success
+[EVERNOTE]2022/02/16 - 22:58:21.887	[34minfo[0m	use middleware logger
+[EVERNOTE]2022/02/16 - 22:58:21.887	[34minfo[0m	use middleware cors
+[EVERNOTE]2022/02/16 - 22:58:21.887	[34minfo[0m	register swagger handler
+[EVERNOTE]2022/02/16 - 22:58:21.887	[34minfo[0m	router register success
+[EVERNOTE]2022/02/16 - 22:58:21.895	[34minfo[0m	server run success on 	{"address": ":8888"}
+[EVERNOTE]2022/02/16 - 22:58:28.423	[31merror[0m	create operation record error:	{"err": "Error 1146: Table 'evernote.sys_operation_records' doesn't exist"}
+[EVERNOTE]2022/02/16 - 22:58:52.199	[31merror[0m	create operation record error:	{"err": "Error 1146: Table 'evernote.sys_operation_records' doesn't exist"}
+[EVERNOTE]2022/02/16 - 23:00:02.516	[34minfo[0m	register table success
+[EVERNOTE]2022/02/16 - 23:00:02.517	[34minfo[0m	use middleware logger
+[EVERNOTE]2022/02/16 - 23:00:02.517	[34minfo[0m	use middleware cors
+[EVERNOTE]2022/02/16 - 23:00:02.517	[34minfo[0m	register swagger handler
+[EVERNOTE]2022/02/16 - 23:00:02.517	[34minfo[0m	router register success
+[EVERNOTE]2022/02/16 - 23:00:02.518	[34minfo[0m	server run success on 	{"address": ":8888"}
+[EVERNOTE]2022/02/16 - 23:00:14.700	[34minfo[0m	register table success
+[EVERNOTE]2022/02/16 - 23:00:14.701	[34minfo[0m	use middleware logger
+[EVERNOTE]2022/02/16 - 23:00:14.701	[34minfo[0m	use middleware cors
+[EVERNOTE]2022/02/16 - 23:00:14.701	[34minfo[0m	register swagger handler
+[EVERNOTE]2022/02/16 - 23:00:14.701	[34minfo[0m	router register success
+[EVERNOTE]2022/02/16 - 23:00:14.710	[34minfo[0m	server run success on 	{"address": ":8888"}
+[EVERNOTE]2022/02/16 - 23:00:19.710	[31merror[0m	create operation record error:	{"err": "Error 1146: Table 'evernote.sys_operation_records' doesn't exist"}

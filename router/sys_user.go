@@ -8,7 +8,7 @@ import (
 )
 
 func InitUserRouter(Router *gin.RouterGroup) {
-	UserRouter := Router.Group("user").Use(middleware.OperationRecord())
+	UserRouter := Router.Group("").Use(middleware.OperationRecord())
 	{
 		// UserRouter.POST("register", v1.Register)                 // 用户注册账号
 		// UserRouter.POST("changePassword", v1.ChangePassword)     // 用户修改密码
@@ -17,6 +17,7 @@ func InitUserRouter(Router *gin.RouterGroup) {
 		// UserRouter.DELETE("deleteUser", v1.DeleteUser)           // 删除用户
 		// UserRouter.PUT("setUserInfo", v1.SetUserInfo)            // 设置用户信息
 		//UserRouter.GET("Login", v1.Login) // 用户修改密码
-		UserRouter.GET("test", v1.GetAuth)
+		UserRouter.GET("notebooks", v1.GetNotebooks)
+		UserRouter.POST("notebooks", v1.CreateNotebook)
 	}
 }
