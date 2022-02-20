@@ -19,5 +19,12 @@ func InitUserRouter(Router *gin.RouterGroup) {
 		//UserRouter.GET("Login", v1.Login) // 用户修改密码
 		UserRouter.GET("notebooks", v1.GetNotebooks)
 		UserRouter.POST("notebooks", v1.CreateNotebook)
+		UserRouter.PATCH("notebooks/:id", v1.UpdateNotebook)
+		UserRouter.DELETE("notebooks/:id", v1.DeleteNotebook)
+
+		UserRouter.GET("notes/from/:id", v1.GetNotes)
+		UserRouter.POST("notes/to/:id", v1.CreateNote)
+		UserRouter.PATCH("notes/:id", v1.UpdateNote)
+		UserRouter.DELETE("notes/:id", v1.DeleteNote)
 	}
 }

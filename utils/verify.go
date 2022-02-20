@@ -1,7 +1,9 @@
 package utils
 
 var (
-	NoteBookVerify = Rules{"Title": {NotEmpty()}}
+	NoteVerify      = Rules{"Title": {NotEmpty()}, "Content": {NotEmpty()}}
+	NoteTitleVerify = Rules{"Title": {NotEmpty()}}
+	NoteBookVerify  = Rules{"Title": {NotEmpty()}}
 
 	IdVerify               = Rules{"ID": {NotEmpty()}}
 	ApiVerify              = Rules{"Path": {NotEmpty()}, "Description": {NotEmpty()}, "ApiGroup": {NotEmpty()}, "Method": {NotEmpty()}}
