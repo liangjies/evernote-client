@@ -26,5 +26,10 @@ func InitUserRouter(Router *gin.RouterGroup) {
 		UserRouter.POST("notes/to/:id", v1.CreateNote)
 		UserRouter.PATCH("notes/:id", v1.UpdateNote)
 		UserRouter.DELETE("notes/:id", v1.DeleteNote)
+
+		UserRouter.GET("notes/trash", v1.GetTrashs)
+		UserRouter.DELETE("/notes/confirm/:id", v1.DeleteTrash)
+		UserRouter.PATCH("/notes/revert/:id", v1.RevertNote)
+
 	}
 }

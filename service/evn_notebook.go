@@ -16,7 +16,7 @@ func DeleteNotebook(id uint, uid uint) (err error) {
 	err = global.SYS_DB.Where("notebook_id = ?", id).First(&model.EvnNote{}).Error
 	if err != nil {
 		var notebook model.EvnNotebook
-		err = global.SYS_DB.Where("id = ?", id).Delete(&notebook).Error
+		err = global.SYS_DB.Where("id = ? AND create_by= ?", id, uid).Delete(&notebook).Error
 		return err
 	} else {
 		return errors.New("此笔记本下存在笔记不可删除")
