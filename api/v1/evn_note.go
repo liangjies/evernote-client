@@ -130,3 +130,19 @@ func GetNoteById(c *gin.Context) {
 		}, "获取成功", c)
 	}
 }
+
+// @Summary 用户获取笔记列表
+// @Produce application/json
+// @Success 200 {string} string "{"success":true,"data":{},"msg":"获取成功"}"
+// @Router /notes [get]
+func GetAllNotes(c *gin.Context) {
+	if err, list, total := service.GetAllNotes(getUserID(c)); err != nil {
+		global.SYS_LOG.Error("获取失败!", zap.Any("err", err))
+		response.FailWithMessage("获取失败", c)
+	} else {
+		response.OkWithDetailed(response.PageResult{
+			List:  list,
+			Total: total,
+		}, "获取成功", c)
+	}
+}

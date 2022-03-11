@@ -59,3 +59,15 @@ func GetNoteById(nid uint, uid uint) (err error, list interface{}) {
 	err = db.Where("id = ? AND create_by = ? AND del_flag=0", nid, uid).Find(&noteList).Error
 	return err, noteList
 }
+
+// @Summary 用户获取笔记列表
+// @Produce application/json
+// @Success 200 {string} string "{"success":true,"data":{},"msg":"获取成功"}"
+// @Router /notes [get]
+func GetAllNotes(uid uint) (err error, list interface{}, total int64) {
+	var noteList []model.EvnNote
+	db := global.SYS_DB.Model(&model.EvnNote{})
+	err = db.Count(&total).Error
+	err = db.Select("CreatedAt", "UpdatedAt", "ID", "Title", "Snippet").Where("create_by = ? AND del_flag=0", uid).Find(&noteList).Error
+	return err, noteList, total
+}
