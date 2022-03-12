@@ -23,6 +23,7 @@ func InitUserRouter(Router *gin.RouterGroup) {
 		UserRouter.DELETE("notebooks/:id", v1.DeleteNotebook)
 
 		UserRouter.GET("notes/from/:id", v1.GetNotes)
+		UserRouter.GET("/notes/all", v1.GetAllNotes)
 		UserRouter.POST("notes/to/:id", v1.CreateNote)
 		UserRouter.PATCH("notes/:id", v1.UpdateNote)
 		UserRouter.DELETE("notes/:id", v1.DeleteNote)
@@ -31,6 +32,6 @@ func InitUserRouter(Router *gin.RouterGroup) {
 		UserRouter.GET("notes/trash", v1.GetTrashs)
 		UserRouter.DELETE("/notes/confirm/:id", v1.DeleteTrash)
 		UserRouter.PATCH("/notes/revert/:id", v1.RevertNote)
-
+			
 	}
 }

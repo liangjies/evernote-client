@@ -4,13 +4,15 @@ import (
 	"time"
 
 	"github.com/satori/go.uuid"
-	"gorm.io/gorm"
+	"evernote-client/global"
 )
 
 type SysUser struct {
-	gorm.Model
-	UUID      uuid.UUID `json:"uuid" gorm:"column:uuid;comment:用户UUID"`          // 用户UUID
+	global.SYS_MODEL
+	UUID      uuid.UUID `json:"-" gorm:"column:uuid;comment:用户UUID"`          // 用户UUID
 	Username  string    `json:"userName" gorm:"column:username;comment:用户登录名"`   // 用户登录名
-	Password  string    `json:"passWord"  gorm:"column:password;comment:用户登录密码"` // 用户登录密码
+	NickName  string    `json:"nickName" gorm:"column:nickname;comment:用户昵称"`   // 用户昵称
+	HeaderImg  string    `json:"headerImg" gorm:"column:headerimg;comment:用户昵称"`   // 用户头像
+	Password  string    `json:"-"  gorm:"column:password;comment:用户登录密码"` // 用户登录密码
 	LoginTime time.Time `json:"-"  gorm:"comment:用户上次登录时间"`                      // 上次登录时间
 }
