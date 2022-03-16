@@ -38,20 +38,13 @@ func DeleteNote(c *gin.Context) {
 // @Success 200 {string} string "{"success":true,"data":{},"msg":"更新成功"}"
 // @Router /notebooks [post]
 func UpdateNote(c *gin.Context) {
-	oid, err := strconv.Atoi(c.Param("id"))
-	if err != nil {
-		response.FailWithMessage("参数错误", c)
-		return
-	}
-	nid := uint(oid)
-
 	var note model.EvnNote
 	_ = c.ShouldBindJSON(&note)
 	if err := utils.Verify(note, utils.NoteBookVerify); err != nil {
 		response.FailWithMessage(err.Error(), c)
 		return
 	}
-	if err := service.UpdateNote(note, nid, getUserID(c)); err != nil {
+	if err := service.UpdateNote(note, getUserID(c)); err != nil {
 		global.SYS_LOG.Error("更新失败!", zap.Any("err", err))
 		response.FailWithMessage("更新失败", c)
 	} else {

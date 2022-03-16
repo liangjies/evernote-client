@@ -19,9 +19,9 @@ func DeleteNote(nid uint, uid uint) (err error) {
 //@description: 用户修改笔记
 //@param: n model.EvnNote, nid uint, uid uint
 //@return: err error
-func UpdateNote(n model.EvnNote, nid uint, uid uint) (err error) {
+func UpdateNote(n model.EvnNote, uid uint) (err error) {
 	var note model.EvnNote
-	err = global.SYS_DB.Select("title", "content").Where("id = ? AND create_by = ? AND del_flag=0", nid, uid).First(&note).Updates(&n).Error
+	err = global.SYS_DB.Select("title", "content", "notebook_id").Where("id = ? AND create_by = ? AND del_flag=0", n.ID, uid).First(&note).Updates(&n).Error
 	return err
 }
 

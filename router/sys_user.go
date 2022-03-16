@@ -17,21 +17,21 @@ func InitUserRouter(Router *gin.RouterGroup) {
 		// UserRouter.DELETE("deleteUser", v1.DeleteUser)           // 删除用户
 		// UserRouter.PUT("setUserInfo", v1.SetUserInfo)            // 设置用户信息
 		//UserRouter.GET("Login", v1.Login) // 用户修改密码
-		UserRouter.GET("notebooks", v1.GetNotebooks)
-		UserRouter.POST("notebooks", v1.CreateNotebook)
+		UserRouter.GET("notebook/get", v1.GetNotebooks)
+		UserRouter.POST("notebook/add", v1.CreateNotebook)
 		UserRouter.PATCH("notebooks/:id", v1.UpdateNotebook)
-		UserRouter.DELETE("notebooks/:id", v1.DeleteNotebook)
+		UserRouter.DELETE("notebook/del/:id", v1.DeleteNotebook)
 
 		UserRouter.GET("notes/from/:id", v1.GetNotes)
 		UserRouter.GET("/notes/all", v1.GetAllNotes)
-		UserRouter.POST("notes/to/:id", v1.CreateNote)
-		UserRouter.PATCH("notes/:id", v1.UpdateNote)
+		UserRouter.POST("notes/add", v1.CreateNote)
+		UserRouter.POST("notes/update", v1.UpdateNote)
 		UserRouter.DELETE("notes/:id", v1.DeleteNote)
 		UserRouter.GET("notes/:id", v1.GetNoteById)
 
 		UserRouter.GET("notes/trash", v1.GetTrashs)
 		UserRouter.DELETE("/notes/confirm/:id", v1.DeleteTrash)
 		UserRouter.PATCH("/notes/revert/:id", v1.RevertNote)
-			
+
 	}
 }
