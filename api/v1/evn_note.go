@@ -58,12 +58,6 @@ func UpdateNote(c *gin.Context) {
 // @Success 200 {string} string "{"success":true,"data":{},"msg":"创建成功"}"
 // @Router /notes/to/:id [post]
 func CreateNote(c *gin.Context) {
-	oid, err := strconv.Atoi(c.Param("id"))
-	if err != nil {
-		response.FailWithMessage("参数错误", c)
-		return
-	}
-	nid := uint(oid)
 
 	var note model.EvnNote
 	_ = c.ShouldBindJSON(&note)
@@ -71,11 +65,11 @@ func CreateNote(c *gin.Context) {
 		response.FailWithMessage(err.Error(), c)
 		return
 	}
-	if err := service.CreateNote(note, nid, getUserID(c)); err != nil {
+	if id, err := service.CreateNote(note, getUserID(c)); err != nil {
 		global.SYS_LOG.Error("创建失败!", zap.Any("err", err))
 		response.FailWithMessage("创建失败", c)
 	} else {
-		response.OkWithMessage("创建成功", c)
+		response.OkWithDetailed(response.AddResult{ID: id}, "创建成功", c)
 	}
 }
 

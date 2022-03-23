@@ -29,12 +29,11 @@ func UpdateNote(n model.EvnNote, uid uint) (err error) {
 //@description: 用户新建笔记
 //@param: n model.EvnNote, nid uint, uid uint
 //@return: err error
-func CreateNote(n model.EvnNote, nid uint, uid uint) (err error) {
+func CreateNote(n model.EvnNote, uid uint) (id uint, err error) {
 	n.CreateBy = uid
-	n.NotebookId = nid
-	n.DelFlag = false
+	//n.DelFlag = false
 	err = global.SYS_DB.Create(&n).Error
-	return err
+	return n.ID, err
 }
 
 //@function: GetNotebooks
@@ -67,7 +66,7 @@ func GetNoteById(nid uint, uid uint) (err error, list interface{}) {
 func GetAllNotes(uid uint) (err error, list interface{}, total int64) {
 	var noteList []model.EvnNote
 	db := global.SYS_DB.Model(&model.EvnNote{})
+	err = db.Select("CreatedAt", "UpdatedAt", "ID", "Title", "Snippet").Where("create_by = ? AND del_flag=0", uid).Order("updated_at desc").Find(&noteList).Error
 	err = db.Count(&total).Error
-	err = db.Select("CreatedAt", "UpdatedAt", "ID", "Title", "Snippet").Where("create_by = ? AND del_flag=0", uid).Find(&noteList).Error
 	return err, noteList, total
 }

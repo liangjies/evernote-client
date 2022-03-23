@@ -10,3 +10,7 @@ type PageResult struct {
 type NoteResult struct {
 	List interface{} `json:"list"`
 }
+
+type AddResult struct {
+	ID interface{} `json:"id"`
+}
