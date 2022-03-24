@@ -30,8 +30,10 @@ func InitUserRouter(Router *gin.RouterGroup) {
 		UserRouter.GET("notes/:id", v1.GetNoteById)
 
 		UserRouter.GET("trash/all", v1.GetTrashs)
-		UserRouter.DELETE("/notes/confirm/:id", v1.DeleteTrash)
-		UserRouter.PATCH("/notes/revert/:id", v1.RevertNote)
+		UserRouter.GET("trash/:id", v1.GetTrashById)
+
+		UserRouter.DELETE("/trash/confirm/:id", v1.DeleteTrash)
+		UserRouter.PATCH("/trash/revert/:id", v1.RevertNote)
 
 	}
 }

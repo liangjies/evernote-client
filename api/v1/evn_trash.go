@@ -66,3 +66,25 @@ func GetTrashs(c *gin.Context) {
 		}, "获取成功", c)
 	}
 }
+
+// @Summary 用户根据id获取废纸篓笔记详情
+// @Produce application/json
+// @Success 200 {string} string "{"success":true,"data":{},"msg":"获取成功"}"
+// @Router /notes/from/:id [get]
+func GetTrashById(c *gin.Context) {
+	oid, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		response.FailWithMessage("参数错误", c)
+		return
+	}
+	nid := uint(oid)
+
+	if err, list := service.GetTrashById(nid, getUserID(c)); err != nil {
+		global.SYS_LOG.Error("获取失败!", zap.Any("err", err))
+		response.FailWithMessage("获取失败", c)
+	} else {
+		response.OkWithDetailed(response.NoteResult{
+			List: list,
+		}, "获取成功", c)
+	}
+}
