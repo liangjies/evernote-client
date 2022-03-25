@@ -32,8 +32,8 @@ func DeleteTrash(nid uint, uid uint) (err error) {
 func GetTrashs(uid uint) (err error, list interface{}, total int64) {
 	var noteList []model.EvnNote
 	db := global.SYS_DB.Model(&model.EvnNote{})
-	err = db.Count(&total).Error
 	err = db.Where("create_by = ? AND del_flag=1", uid).Find(&noteList).Error
+	err = db.Count(&total).Error
 	return err, noteList, total
 }
 
