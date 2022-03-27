@@ -10,9 +10,17 @@ import (
 //@param: id uint, uid uint
 //@return: err error
 func DeleteNote(nid uint, uid uint) (err error) {
+	tx := global.SYS_DB.Begin()
 	var note model.EvnNote
-	err = global.SYS_DB.Where("id = ? AND create_by = ? AND del_flag=0", nid, uid).First(&note).Update("del_flag", 1).Error
-	return err
+	err = tx.Where("id = ? AND create_by = ? AND del_flag=0", nid, uid).First(&note).Update("del_flag", 1).Error
+	if err == nil {
+		err = tx.Exec("UPDATE evn_notebooks SET note_counts=(SELECT COUNT(1) FROM evn_notes WHERE notebook_id=(SELECT notebook_id FROM evn_notes WHERE id=? AND del_flag=0)) WHERE id=(SELECT notebook_id FROM evn_notes WHERE id=?)", nid, nid).Error
+	}
+	//回滚
+	if err != nil {
+		tx.Rollback()
+	}
+	return tx.Commit().Error
 }
 
 //@function: UpdateNote
@@ -30,22 +38,32 @@ func UpdateNote(n model.EvnNote, uid uint) (err error) {
 //@param: n model.EvnNote, nid uint, uid uint
 //@return: err error
 func CreateNote(n model.EvnNote, uid uint) (id uint, err error) {
+	tx := global.SYS_DB.Begin()
 	n.CreateBy = uid
-	//n.DelFlag = false
-	err = global.SYS_DB.Create(&n).Error
-	return n.ID, err
+
+	err = tx.Create(&n).Error
+	if err == nil {
+		err = tx.Exec("UPDATE evn_notebooks SET note_counts=(SELECT COUNT(1) FROM evn_notes WHERE notebook_id=? AND del_flag=0) WHERE id=?", n.ID, n.ID).Error
+	}
+	//回滚
+	if err != nil {
+		tx.Rollback()
+	}
+
+	return n.ID, tx.Commit().Error
 }
 
-//@function: GetNotebooks
+//@function: 获取笔记本笔记列表
 //@description: 用户获取笔记列表
 //@param: nid uint, uid uint
 //@return: err error, list interface{}, total int64
-func GetNotes(nid uint, uid uint) (err error, list interface{}, total int64) {
+func GetNotes(nid uint, uid uint) (err error, list interface{}, total int64, title string) {
 	var noteList []model.EvnNote
 	db := global.SYS_DB.Model(&model.EvnNote{})
-	err = db.Count(&total).Error
 	err = db.Select("CreatedAt", "UpdatedAt", "ID", "Title", "NotebookId").Where("notebook_id = ? AND create_by = ? AND del_flag=0", nid, uid).Find(&noteList).Error
-	return err, noteList, total
+	err = db.Count(&total).Error
+	err = global.SYS_DB.Model(&model.EvnNotebook{}).Select("Title").Where("id = ? AND create_by = ?", nid, uid).First(&title).Error
+	return err, noteList, total, title
 }
 
 //@function: GetNotebooks

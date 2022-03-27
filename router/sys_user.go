@@ -22,8 +22,8 @@ func InitUserRouter(Router *gin.RouterGroup) {
 		UserRouter.PATCH("notebooks/:id", v1.UpdateNotebook)
 		UserRouter.DELETE("notebook/del/:id", v1.DeleteNotebook)
 
-		UserRouter.GET("notes/from/:id", v1.GetNotes)
-		UserRouter.GET("/notes/all", v1.GetAllNotes)
+		UserRouter.GET("notes/list/:id", v1.GetNotes)
+		UserRouter.GET("/notes/list/all", v1.GetAllNotes)
 		UserRouter.POST("notes/add", v1.CreateNote)
 		UserRouter.POST("notes/update", v1.UpdateNote)
 		UserRouter.DELETE("notes/:id", v1.DeleteNote)

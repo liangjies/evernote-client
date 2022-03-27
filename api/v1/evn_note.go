@@ -73,7 +73,7 @@ func CreateNote(c *gin.Context) {
 	}
 }
 
-// @Summary 用户获取笔记列表
+// @Summary 获取笔记本笔记列表
 // @Produce application/json
 // @Success 200 {string} string "{"success":true,"data":{},"msg":"获取成功"}"
 // @Router /notes/from/:id [get]
@@ -85,14 +85,14 @@ func GetNotes(c *gin.Context) {
 	}
 	nid := uint(oid)
 
-	if err, list, total := service.GetNotes(nid, getUserID(c)); err != nil {
+	if err, list, total, title := service.GetNotes(nid, getUserID(c)); err != nil {
 		global.SYS_LOG.Error("获取失败!", zap.Any("err", err))
 		response.FailWithMessage("获取失败", c)
 	} else {
 		response.OkWithDetailed(response.PageResult{
 			List:  list,
 			Total: total,
-		}, "获取成功", c)
+		}, title, c)
 	}
 }
 
