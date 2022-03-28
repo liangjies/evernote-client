@@ -3,6 +3,7 @@ package service
 import (
 	"evernote-client/global"
 	"evernote-client/model"
+	"evernote-client/utils"
 )
 
 //@function: DeleteNotebook
@@ -29,7 +30,13 @@ func DeleteNote(nid uint, uid uint) (err error) {
 //@return: err error
 func UpdateNote(n model.EvnNote, uid uint) (err error) {
 	var note model.EvnNote
-	err = global.SYS_DB.Select("title", "content", "notebook_id").Where("id = ? AND create_by = ? AND del_flag=0", n.ID, uid).First(&note).Updates(&n).Error
+	rs := []rune(utils.StripTags(n.Content))
+	i := 40
+	if len(rs) < 40 {
+		i = len(rs)
+	}
+	n.Snippet = string(rs[:i])
+	err = global.SYS_DB.Select("title", "content", "notebook_id", "snippet").Where("id = ? AND create_by = ? AND del_flag=0", n.ID, uid).First(&note).Updates(&n).Error
 	return err
 }
 
@@ -40,7 +47,12 @@ func UpdateNote(n model.EvnNote, uid uint) (err error) {
 func CreateNote(n model.EvnNote, uid uint) (id uint, err error) {
 	tx := global.SYS_DB.Begin()
 	n.CreateBy = uid
-
+	rs := []rune(utils.StripTags(n.Content))
+	i := 40
+	if len(rs) < 40 {
+		i = len(rs)
+	}
+	n.Snippet = string(rs[:i])
 	err = tx.Create(&n).Error
 	if err == nil {
 		err = tx.Exec("UPDATE evn_notebooks SET note_counts=(SELECT COUNT(1) FROM evn_notes WHERE notebook_id=? AND del_flag=0) WHERE id=?", n.ID, n.ID).Error
@@ -60,7 +72,7 @@ func CreateNote(n model.EvnNote, uid uint) (id uint, err error) {
 func GetNotes(nid uint, uid uint) (err error, list interface{}, total int64, title string) {
 	var noteList []model.EvnNote
 	db := global.SYS_DB.Model(&model.EvnNote{})
-	err = db.Select("CreatedAt", "UpdatedAt", "ID", "Title", "NotebookId").Where("notebook_id = ? AND create_by = ? AND del_flag=0", nid, uid).Find(&noteList).Error
+	err = db.Select("CreatedAt", "UpdatedAt", "ID", "Title", "NotebookId").Where("notebook_id = ? AND create_by = ? AND del_flag=0", nid, uid).Order("updated_at desc").Find(&noteList).Error
 	err = db.Count(&total).Error
 	err = global.SYS_DB.Model(&model.EvnNotebook{}).Select("Title").Where("id = ? AND create_by = ?", nid, uid).First(&title).Error
 	return err, noteList, total, title
