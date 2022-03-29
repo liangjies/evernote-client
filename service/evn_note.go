@@ -15,7 +15,7 @@ func DeleteNote(nid uint, uid uint) (err error) {
 	var note model.EvnNote
 	err = tx.Where("id = ? AND create_by = ? AND del_flag=0", nid, uid).First(&note).Update("del_flag", 1).Error
 	if err == nil {
-		err = tx.Exec("UPDATE evn_notebooks SET note_counts=(SELECT COUNT(1) FROM evn_notes WHERE notebook_id=(SELECT notebook_id FROM evn_notes WHERE id=? AND del_flag=0)) WHERE id=(SELECT notebook_id FROM evn_notes WHERE id=?)", nid, nid).Error
+		err = tx.Exec("UPDATE evn_notebooks SET note_counts=(SELECT COUNT(1) FROM evn_notes WHERE notebook_id=(SELECT notebook_id FROM evn_notes WHERE id=?)) WHERE id=(SELECT notebook_id FROM evn_notes WHERE id=?)", nid, nid).Error
 	}
 	//回滚
 	if err != nil {
@@ -47,15 +47,23 @@ func UpdateNote(n model.EvnNote, uid uint) (err error) {
 func CreateNote(n model.EvnNote, uid uint) (id uint, err error) {
 	tx := global.SYS_DB.Begin()
 	n.CreateBy = uid
+
+	// 生成笔记片段
 	rs := []rune(utils.StripTags(n.Content))
 	i := 40
 	if len(rs) < 40 {
 		i = len(rs)
 	}
 	n.Snippet = string(rs[:i])
+
+	// 如果NotebookId为0，默认笔记本
+	if n.NotebookId == 0 {
+		err = tx.Model(&model.EvnNotebook{}).Select("id").Where("create_by=? AND main=1", uid).First(&n.NotebookId).Error
+	}
+
 	err = tx.Create(&n).Error
 	if err == nil {
-		err = tx.Exec("UPDATE evn_notebooks SET note_counts=(SELECT COUNT(1) FROM evn_notes WHERE notebook_id=? AND del_flag=0) WHERE id=?", n.ID, n.ID).Error
+		err = tx.Exec("UPDATE evn_notebooks SET note_counts=(SELECT COUNT(1) FROM evn_notes WHERE notebook_id=? AND del_flag=0) WHERE id=?", n.NotebookId, n.NotebookId).Error
 	}
 	//回滚
 	if err != nil {
