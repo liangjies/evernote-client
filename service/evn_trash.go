@@ -12,6 +12,9 @@ import (
 func RevertNote(nid uint, uid uint) (err error) {
 	tx := global.SYS_DB.Begin()
 	var note model.EvnNote
+
+	// 恢复笔记判断原笔记本是否存在
+
 	err = global.SYS_DB.Where("id = ? AND create_by = ? AND del_flag=1", nid, uid).First(&note).Update("del_flag", 0).Error
 	if err == nil {
 		err = tx.Exec("UPDATE evn_notebooks SET note_counts=(SELECT COUNT(1) FROM evn_notes WHERE notebook_id=(SELECT notebook_id FROM evn_notes WHERE id=? AND del_flag=0)) WHERE id=(SELECT notebook_id FROM evn_notes WHERE id=?)", nid, nid).Error
