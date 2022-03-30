@@ -15,7 +15,10 @@ mysql:
   max-open-conns: 0
   log-mode: "info"
   log-zap: false
-  
+captcha:
+  key-long: 6
+  img-width: 120
+  img-height: 50
 zap:
   level: info
   format: console

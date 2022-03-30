@@ -67,6 +67,23 @@ func Login(c *gin.Context) {
 
 }
 
+// @Tags Base
+// @Summary 用户退出登录
+// @Produce  application/json
+// @Param data body request.Login true "用户名, 密码, 验证码"
+// @Success 200 {string} string "{"success":true,"data":{},"msg":"登陆成功"}"
+// @Router /base/login [post]
+func Logout(c *gin.Context) {
+	token := c.Request.Header.Get("x-token")
+	jwt := model.JwtBlacklist{Jwt: token}
+	if err := service.JsonInBlacklist(jwt); err != nil {
+		global.SYS_LOG.Error("退出登录失败!", zap.Any("err", err))
+		response.FailWithMessage("退出登录失败", c)
+	} else {
+		response.OkWithMessage("成功退出登录", c)
+	}
+}
+
 // 登录以后签发jwt
 func tokenNext(c *gin.Context, user model.SysUser) {
 	j := &middleware.JWT{SigningKey: []byte(global.SYS_CONFIG.JWT.SigningKey)} // 唯一签名

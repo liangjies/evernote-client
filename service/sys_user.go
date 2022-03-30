@@ -41,6 +41,17 @@ func Login(u *model.SysUser) (err error, userInter *model.SysUser) {
 }
 
 //@author: [piexlmax](https://github.com/piexlmax)
+//@function: Login
+//@description: 用户退出登录
+//@param: u *model.SysUser
+//@return: err error, userInter *model.SysUser
+
+func Logout(jwtList model.JwtBlacklist) (err error) {
+	err = global.SYS_DB.Create(&jwtList).Error
+	return
+}
+
+//@author: [piexlmax](https://github.com/piexlmax)
 //@function: ChangePassword
 //@description: 修改用户密码
 //@param: u *model.SysUser, newPassword string

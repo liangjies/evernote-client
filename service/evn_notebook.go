@@ -13,7 +13,7 @@ import (
 //@param: id uint, uid uint
 //@return: err error
 func DeleteNotebook(id uint, uid uint) (err error) {
-	err = global.SYS_DB.Where("notebook_id = ?", id).First(&model.EvnNote{}).Error
+	err = global.SYS_DB.Where("notebook_id = ? AND del_flag=0", id).First(&model.EvnNote{}).Error
 	if err != nil {
 		var notebook model.EvnNotebook
 		err = global.SYS_DB.Where("id = ? AND create_by= ?", id, uid).Delete(&notebook).Error

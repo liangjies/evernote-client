@@ -17,6 +17,8 @@ func InitUserRouter(Router *gin.RouterGroup) {
 		// UserRouter.DELETE("deleteUser", v1.DeleteUser)           // 删除用户
 		// UserRouter.PUT("setUserInfo", v1.SetUserInfo)            // 设置用户信息
 		//UserRouter.GET("Login", v1.Login) // 用户修改密码
+		UserRouter.POST("user/logout", v1.Logout)
+
 		UserRouter.GET("notebook/get", v1.GetNotebooks)
 		UserRouter.POST("notebook/add", v1.CreateNotebook)
 		UserRouter.PATCH("notebooks/:id", v1.UpdateNotebook)

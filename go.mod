@@ -16,6 +16,7 @@ require (
 	github.com/go-sql-driver/mysql v1.6.0
 	github.com/lestrrat-go/file-rotatelogs v2.4.0+incompatible
 	github.com/lestrrat-go/strftime v1.0.5 // indirect
+	github.com/mojocn/base64Captcha v1.3.5
 	github.com/satori/go.uuid v1.2.0
 	github.com/spf13/viper v1.10.1
 	github.com/swaggo/gin-swagger v1.4.1
