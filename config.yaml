@@ -16,9 +16,9 @@ mysql:
   log-mode: "info"
   log-zap: false
 captcha:
-  key-long: 6
+  key-long: 4
   img-width: 120
-  img-height: 50
+  img-height: 40
 zap:
   level: info
   format: console
