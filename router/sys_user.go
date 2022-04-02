@@ -30,6 +30,7 @@ func InitUserRouter(Router *gin.RouterGroup) {
 		UserRouter.POST("notes/update", v1.UpdateNote)
 		UserRouter.DELETE("notes/:id", v1.DeleteNote)
 		UserRouter.GET("notes/:id", v1.GetNoteById)
+		UserRouter.POST("notes/search", v1.SearchNote)
 
 		UserRouter.GET("trash/all", v1.GetTrashs)
 		UserRouter.GET("trash/:id", v1.GetTrashById)

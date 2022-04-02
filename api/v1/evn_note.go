@@ -3,6 +3,7 @@ package v1
 import (
 	"evernote-client/global"
 	"evernote-client/model"
+	"evernote-client/model/request"
 	"evernote-client/model/response"
 	"evernote-client/service"
 	"evernote-client/utils"
@@ -124,6 +125,29 @@ func GetNoteById(c *gin.Context) {
 // @Router /notes/all [get]
 func GetAllNotes(c *gin.Context) {
 	if err, list, total := service.GetAllNotes(getUserID(c)); err != nil {
+		global.SYS_LOG.Error("获取失败!", zap.Any("err", err))
+		response.FailWithMessage("获取失败", c)
+	} else {
+		response.OkWithDetailed(response.PageResult{
+			List:  list,
+			Total: total,
+		}, "获取成功", c)
+	}
+}
+
+// @Summary 搜索笔记
+// @Produce application/json
+// @Success 200 {string} string "{"success":true,"data":{},"msg":"获取成功"}"
+// @Router /notes/search [post]
+func SearchNote(c *gin.Context) {
+	var SearchParams request.SearchNoteParams
+	err := c.ShouldBindJSON(&SearchParams)
+	if err != nil {
+		response.FailWithMessage("参数错误", c)
+		return
+	}
+
+	if err, list, total := service.SearchNote(SearchParams.SearchKey, SearchParams.NotebookId, getUserID(c)); err != nil {
 		global.SYS_LOG.Error("获取失败!", zap.Any("err", err))
 		response.FailWithMessage("获取失败", c)
 	} else {

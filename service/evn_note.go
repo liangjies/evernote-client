@@ -108,3 +108,24 @@ func GetAllNotes(uid uint) (err error, list interface{}, total int64) {
 	err = db.Count(&total).Error
 	return err, noteList, total
 }
+
+// @Summary 搜索笔记
+// @Produce application/json
+// @Success 200 {string} string "{"success":true,"data":{},"msg":"获取成功"}"
+// @Router /notes/search [post]
+func SearchNote(SearchKey string, NotebookId uint, uid uint) (err error, list interface{}, total int64) {
+	var noteList []model.EvnNote
+	db := global.SYS_DB.Model(&model.EvnNote{})
+	db.Where("del_flag = 0")
+	if NotebookId != 0 {
+		db.Where("notebook_id = ?", NotebookId)
+	}
+
+	if SearchKey != "" {
+		db.Where("title like ? OR content like ?", "%"+SearchKey+"%", "%"+SearchKey+"%")
+	}
+
+	err = db.Select("CreatedAt", "UpdatedAt", "ID", "Title", "Snippet").Order("updated_at desc").Find(&noteList).Error
+	err = db.Count(&total).Error
+	return err, noteList, total
+}
