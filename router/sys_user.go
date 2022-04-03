@@ -38,5 +38,7 @@ func InitUserRouter(Router *gin.RouterGroup) {
 		UserRouter.DELETE("/trash/confirm/:id", v1.DeleteTrash)
 		UserRouter.PATCH("/trash/revert/:id", v1.RevertNote)
 
+		UserRouter.GET("history/:id", v1.GetHistories)
+
 	}
 }

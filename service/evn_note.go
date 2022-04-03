@@ -29,14 +29,29 @@ func DeleteNote(nid uint, uid uint) (err error) {
 //@param: n model.EvnNote, nid uint, uid uint
 //@return: err error
 func UpdateNote(n model.EvnNote, uid uint) (err error) {
+	db := global.SYS_DB.Model(&model.EvnNote{})
 	var note model.EvnNote
+
+	// 生成笔记片段
 	rs := []rune(utils.StripTags(n.Content))
 	i := 40
 	if len(rs) < 40 {
 		i = len(rs)
 	}
 	n.Snippet = string(rs[:i])
-	err = global.SYS_DB.Select("title", "content", "notebook_id", "snippet").Where("id = ? AND create_by = ? AND del_flag=0", n.ID, uid).First(&note).Updates(&n).Error
+
+	err = db.Select("title", "content", "notebook_id", "snippet").Where("id = ? AND create_by = ? AND del_flag=0", n.ID, uid).First(&note).Updates(&n).Error
+
+	// 保存历史记录
+	var count uint
+	err = db.Raw("SELECT count(b.id) FROM `evn_notes` a LEFT JOIN `evn_histories` b ON a.content=b.content WHERE a.id=?", n.ID).Scan(&count).Error
+	if count == 0 {
+		var version uint
+		err = db.Raw("SELECT IFNULL(max(version),0) FROM `evn_histories`  WHERE note_id=?", n.ID).Scan(&version).Error
+		history := model.EvnHistory{NoteId: n.ID, Content: n.Content, Version: version + 1}
+		err = global.SYS_DB.Model(&model.EvnHistory{}).Create(&history).Error
+	}
+
 	return err
 }
 
