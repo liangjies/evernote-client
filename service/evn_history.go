@@ -20,7 +20,21 @@ func GetHistories(nid uint, uid uint) (err error, list interface{}, total int64)
 		return err, historyList, total
 	}
 
-	err = db.Select("CreatedAt", "ID", "Version", "Content").Where("note_id = ?", nid).Order("Version").Find(&historyList).Error
+	err = db.Select("CreatedAt", "ID", "Version", "Content", "NoteId").Where("note_id = ?", nid).Order("Version desc").Find(&historyList).Error
 	err = db.Count(&total).Error
 	return err, historyList, total
+}
+
+//@function: RecoverHistory
+//@description: 恢复笔记历史版本
+//@param: nid uint, uid uint
+//@return: err error, list interface{}, total int64
+func RecoverHistory(evnHistory model.EvnHistory, uid uint) (err error) {
+	db := global.SYS_DB.Model(&model.EvnHistory{})
+	var evnNote model.EvnNote
+	evnNote.ID = evnHistory.NoteId
+	err = db.Select("Content").Where("id=?", evnHistory.ID).Scan(&evnNote.Content).Error
+
+	err = UpdateNote(evnNote, uid)
+	return err
 }

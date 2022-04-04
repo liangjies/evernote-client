@@ -39,6 +39,7 @@ func InitUserRouter(Router *gin.RouterGroup) {
 		UserRouter.PATCH("/trash/revert/:id", v1.RevertNote)
 
 		UserRouter.GET("history/:id", v1.GetHistories)
+		UserRouter.POST("history/recover", v1.RecoverHistory)
 
 	}
 }
