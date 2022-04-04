@@ -4,6 +4,7 @@ system:
   db-type: mysql
   oss-type: local
   use-multipoint: false
+  version-max: 20
   
 mysql:
   path: 127.0.0.1:3306

@@ -40,16 +40,34 @@ func UpdateNote(n model.EvnNote, uid uint) (err error) {
 	}
 	n.Snippet = string(rs[:i])
 
-	err = db.Select("title", "content", "notebook_id", "snippet").Where("id = ? AND create_by = ? AND del_flag=0", n.ID, uid).First(&note).Updates(&n).Error
-
-	// 保存历史记录
+	// 查询是否没有修改
 	var count uint
-	err = db.Raw("SELECT count(b.id) FROM `evn_notes` a LEFT JOIN `evn_histories` b ON a.content=b.content WHERE a.id=?", n.ID).Scan(&count).Error
+	err = db.Raw("SELECT count(id) FROM `evn_notes` WHERE id=? AND content=?", n.ID, n.Content).Scan(&count).Error
+
+	if n.NotebookId != 0 {
+		err = db.Select("title", "content", "notebook_id", "snippet").Where("id = ? AND create_by = ? AND del_flag=0", n.ID, uid).First(&note).Updates(&n).Error
+	} else {
+		err = db.Select("content").Where("id = ? AND create_by = ? AND del_flag=0", n.ID, uid).First(&note).Updates(&n).Error
+	}
+	// 保存历史记录
 	if count == 0 {
 		var version uint
-		err = db.Raw("SELECT IFNULL(max(version),0) FROM `evn_histories`  WHERE note_id=?", n.ID).Scan(&version).Error
+		var versionMin uint
+		var versionCount uint
+		row := db.Raw("SELECT IFNULL(max(version),0),count(1),IFNULL(min(version),0) FROM `evn_histories`  WHERE note_id=?", n.ID).Row()
+		row.Scan(&version, &versionCount, &versionMin)
+
 		history := model.EvnHistory{NoteId: n.ID, Content: n.Content, Version: version + 1}
 		err = global.SYS_DB.Model(&model.EvnHistory{}).Create(&history).Error
+
+		// 历史记录保存限制
+		var VersionMax uint = 20
+		if global.SYS_CONFIG.System.VersionMax != 0 {
+			VersionMax = global.SYS_CONFIG.System.VersionMax
+		}
+		if versionCount > VersionMax {
+			err = global.SYS_DB.Model(&model.EvnHistory{}).Where("note_id=? AND version=?", n.ID, versionMin).Delete(&model.EvnHistory{}).Error
+		}
 	}
 
 	return err
