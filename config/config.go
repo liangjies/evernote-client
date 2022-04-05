@@ -8,4 +8,8 @@ type Server struct {
 	Casbin  Casbin  `mapstructure:"casbin" json:"casbin" yaml:"casbin"`
 	System  System  `mapstructure:"system" json:"system" yaml:"system"`
 	Captcha Captcha `mapstructure:"captcha" json:"captcha" yaml:"captcha"`
+	// oss
+	Local      Local      `mapstructure:"local" json:"local" yaml:"local"`
+	Qiniu      Qiniu      `mapstructure:"qiniu" json:"qiniu" yaml:"qiniu"`
+	TencentCOS TencentCOS `mapstructure:"tencent-cos" json:"tencentCOS" yaml:"tencent-cos"`
 }

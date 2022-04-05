@@ -42,3 +42,21 @@ jwt:
   signing-key: qmtPlus
   expires-time: 604800
   buffer-time: 86400
+local:
+  path: uploads/file
+qiniu:
+  zone: ZoneHuaDong
+  bucket: ""
+  img-path: ""
+  use-https: false
+  access-key: ""
+  secret-key: ""
+  use-cdn-domains: false
+  
+tencent-cos:
+  bucket: ""
+  region: ""
+  secret-id: ""
+  secret-key: ""
+  base-url: ""
+  path-prefix: ""

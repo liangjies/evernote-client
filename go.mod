@@ -17,9 +17,11 @@ require (
 	github.com/lestrrat-go/file-rotatelogs v2.4.0+incompatible
 	github.com/lestrrat-go/strftime v1.0.5 // indirect
 	github.com/mojocn/base64Captcha v1.3.5
+	github.com/qiniu/api.v7/v7 v7.8.2
 	github.com/satori/go.uuid v1.2.0
 	github.com/spf13/viper v1.10.1
 	github.com/swaggo/gin-swagger v1.4.1
+	github.com/tencentyun/cos-go-sdk-v5 v0.7.34
 	github.com/unrolled/secure v1.10.0
 	github.com/xordataexchange/crypt v0.0.3-0.20170626215501-b2862e3d0a77 // indirect
 	go.uber.org/zap v1.21.0

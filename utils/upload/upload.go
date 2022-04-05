@@ -1,7 +1,7 @@
 package upload
 
 import (
-	"gin-vue-admin/global"
+	"evernote-client/global"
 	"mime/multipart"
 )
 
@@ -23,15 +23,13 @@ type OSS interface {
 //@return: OSS
 
 func NewOss() OSS {
-	switch global.GVA_CONFIG.System.OssType {
+	switch global.SYS_CONFIG.System.OssType {
 	case "local":
 		return &Local{}
 	case "qiniu":
 		return &Qiniu{}
 	case "tencent-cos":
 		return &TencentCOS{}
-	case "aliyun-oss":
-		return &AliyunOSS{}
 	default:
 		return &Local{}
 	}

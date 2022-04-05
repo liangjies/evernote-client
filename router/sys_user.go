@@ -41,5 +41,6 @@ func InitUserRouter(Router *gin.RouterGroup) {
 		UserRouter.GET("history/:id", v1.GetHistories)
 		UserRouter.POST("history/recover", v1.RecoverHistory)
 
+		UserRouter.POST("/upload", v1.UploadFile) // 上传文件
 	}
 }
