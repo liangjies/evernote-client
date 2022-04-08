@@ -31,18 +31,6 @@ type AuthLogin struct {
 	Msg  string `json:"msg"`
 }
 
-func GetAuth(c *gin.Context) {
-	var auth Auth
-	auth.IsLogin = true
-	auth.Data = User{"liangjies"}
-	_ = auth
-	//response.FailWithMessage("设置登录状态失败", c)
-	response.OkWithDetailed(response.PageResult{
-		List: "liangjies",
-		Page: int(getUserID(c)),
-	}, "获取成功", c)
-}
-
 // @Tags Base
 // @Summary 用户登录
 // @Produce  application/json

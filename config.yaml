@@ -2,7 +2,7 @@ system:
   env: public
   addr: 8888
   db-type: mysql
-  oss-type: local
+  oss-type: qiniu
   use-multipoint: false
   version-max: 20
   
@@ -45,12 +45,12 @@ jwt:
 local:
   path: uploads/file
 qiniu:
-  zone: ZoneHuaDong
-  bucket: ""
-  img-path: ""
+  zone: ZoneBeimei
+  bucket: "backup"
+  img-path: "evernote"
   use-https: false
-  access-key: ""
-  secret-key: ""
+  access-key: "BTZKZOi9AH9zBuLv1VWaKfBwdyg0kFb42dEi8sg9"
+  secret-key: "CijtsHmJvoR8XpHMOSsKWX7zEBXvEAJqmyx8z8T1"
   use-cdn-domains: false
   
 tencent-cos:
