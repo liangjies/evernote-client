@@ -47,7 +47,8 @@ local:
 qiniu:
   zone: ZoneBeimei
   bucket: "backup"
-  img-path: "evernote"
+  img-path: "http://img.icewx.com"
+  path-prefix: "evernote"
   use-https: false
   access-key: "BTZKZOi9AH9zBuLv1VWaKfBwdyg0kFb42dEi8sg9"
   secret-key: "CijtsHmJvoR8XpHMOSsKWX7zEBXvEAJqmyx8z8T1"
