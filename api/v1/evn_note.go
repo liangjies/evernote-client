@@ -16,7 +16,7 @@ import (
 // @Summary 用户删除笔记
 // @Produce application/json
 // @Success 200 {string} string "{"success":true,"data":{},"msg":"删除成功"}"
-// @Router /notebooks [post]
+// @Router /notes/:id [DELETE]
 func DeleteNote(c *gin.Context) {
 	oid, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
@@ -33,11 +33,11 @@ func DeleteNote(c *gin.Context) {
 	}
 }
 
-// @Summary 用户修改笔记本
+// @Summary 用户修改笔记
 // @accept application/json
 // @Produce application/json
 // @Success 200 {string} string "{"success":true,"data":{},"msg":"更新成功"}"
-// @Router /notebooks [post]
+// @Router /notes/update [POST]
 func UpdateNote(c *gin.Context) {
 	var note model.EvnNote
 	_ = c.ShouldBindJSON(&note)
@@ -57,7 +57,7 @@ func UpdateNote(c *gin.Context) {
 // @accept application/json
 // @Produce application/json
 // @Success 200 {string} string "{"success":true,"data":{},"msg":"创建成功"}"
-// @Router /notes/to/:id [post]
+// @Router /notes/add [post]
 func CreateNote(c *gin.Context) {
 
 	var note model.EvnNote
@@ -100,7 +100,7 @@ func GetNotes(c *gin.Context) {
 // @Summary 用户根据id获取笔记详情
 // @Produce application/json
 // @Success 200 {string} string "{"success":true,"data":{},"msg":"获取成功"}"
-// @Router /notes/from/:id [get]
+// @Router /notes/:id [get]
 func GetNoteById(c *gin.Context) {
 	oid, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
@@ -119,7 +119,7 @@ func GetNoteById(c *gin.Context) {
 	}
 }
 
-// @Summary 用户获取笔记列表
+// @Summary 获取所有笔记
 // @Produce application/json
 // @Success 200 {string} string "{"success":true,"data":{},"msg":"获取成功"}"
 // @Router /notes/all [get]

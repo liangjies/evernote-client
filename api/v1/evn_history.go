@@ -36,7 +36,7 @@ func GetHistories(c *gin.Context) {
 
 // @Summary 恢复笔记历史版本
 // @Produce application/json
-// @Success 200 {string} string "{"success":true,"data":{},"msg":"删除成功"}"
+// @Success 200 {string} string "{"success":true,"data":{},"msg":"还原笔记成功"}"
 // @Router /history/recover [post]
 func RecoverHistory(c *gin.Context) {
 	var evnHistory model.EvnHistory

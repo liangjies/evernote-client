@@ -4,13 +4,11 @@ import (
 	"errors"
 	"evernote-client/global"
 	"evernote-client/model"
-	"evernote-client/model/request"
 	"evernote-client/utils"
 
 	"gorm.io/gorm"
 )
 
-//@author: [piexlmax](https://github.com/piexlmax)
 //@function: Register
 //@description: 用户注册
 //@param: u model.SysUser
@@ -27,7 +25,6 @@ func Register(u model.SysUser) (err error, userInter model.SysUser) {
 	return err, u
 }
 
-//@author: [piexlmax](https://github.com/piexlmax)
 //@function: Login
 //@description: 用户登录
 //@param: u *model.SysUser
@@ -40,7 +37,6 @@ func Login(u *model.SysUser) (err error, userInter *model.SysUser) {
 	return err, &user
 }
 
-//@author: [piexlmax](https://github.com/piexlmax)
 //@function: Login
 //@description: 用户退出登录
 //@param: u *model.SysUser
@@ -51,7 +47,6 @@ func Logout(jwtList model.JwtBlacklist) (err error) {
 	return
 }
 
-//@author: [piexlmax](https://github.com/piexlmax)
 //@function: ChangePassword
 //@description: 修改用户密码
 //@param: u *model.SysUser, newPassword string
@@ -62,44 +57,6 @@ func ChangePassword(u *model.SysUser, newPassword string) (err error, userInter 
 	u.Password = utils.MD5V([]byte(u.Password))
 	err = global.SYS_DB.Where("username = ? AND password = ?", u.Username, u.Password).First(&user).Update("password", utils.MD5V([]byte(newPassword))).Error
 	return err, u
-}
-
-//@author: [piexlmax](https://github.com/piexlmax)
-//@function: GetUserInfoList
-//@description: 分页获取数据
-//@param: info request.PageInfo
-//@return: err error, list interface{}, total int64
-
-func GetUserInfoList(info request.PageInfo) (err error, list interface{}, total int64) {
-	limit := info.PageSize
-	offset := info.PageSize * (info.Page - 1)
-	db := global.SYS_DB.Model(&model.SysUser{})
-	var userList []model.SysUser
-	err = db.Count(&total).Error
-	err = db.Limit(limit).Offset(offset).Preload("Authority").Find(&userList).Error
-	return err, userList, total
-}
-
-//@author: [piexlmax](https://github.com/piexlmax)
-//@function: SetUserAuthority
-//@description: 设置一个用户的权限
-//@param: uuid uuid.UUID, authorityId string
-//@return: err error
-
-func SetUserAuthority(id uint, authorityId string) (err error) {
-	err = global.SYS_DB.Where("uuid = ?", id).First(&model.SysUser{}).Update("authority_id", authorityId).Error
-	return err
-}
-
-//@function: DeleteUser
-//@description: 删除用户
-//@param: id float64
-//@return: err error
-
-func DeleteUser(id float64) (err error) {
-	var user model.SysUser
-	err = global.SYS_DB.Where("id = ?", id).Delete(&user).Error
-	return err
 }
 
 //@function: SetUserInfo

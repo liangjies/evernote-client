@@ -41,7 +41,7 @@ type NoteRespondData struct {
 // @Summary 用户删除笔记本
 // @Produce application/json
 // @Success 200 {string} string "{"success":true,"data":{},"msg":"删除成功"}"
-// @Router /notebooks [post]
+// @Router /notebook/del/:id [DELETE]
 func DeleteNotebook(c *gin.Context) {
 	oid, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
@@ -62,7 +62,7 @@ func DeleteNotebook(c *gin.Context) {
 // @accept application/json
 // @Produce application/json
 // @Success 200 {string} string "{"success":true,"data":{},"msg":"更新成功"}"
-// @Router /notebooks [post]
+// @Router /notebook/:id [PATCH]
 func UpdateNotebook(c *gin.Context) {
 	oid, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
@@ -89,7 +89,7 @@ func UpdateNotebook(c *gin.Context) {
 // @accept application/json
 // @Produce application/json
 // @Success 200 {string} string "{"success":true,"data":{},"msg":"创建成功"}"
-// @Router /notebooks [post]
+// @Router /notebook/add [post]
 func CreateNotebook(c *gin.Context) {
 	var notebook model.EvnNotebook
 	_ = c.ShouldBindJSON(&notebook)
@@ -108,7 +108,7 @@ func CreateNotebook(c *gin.Context) {
 // @Summary 用户获取笔记本
 // @Produce application/json
 // @Success 200 {string} string "{"success":true,"data":{},"msg":"获取成功"}"
-// @Router /notebooks [get]
+// @Router /notebook/get [get]
 func GetNotebooks(c *gin.Context) {
 	if err, list, total := service.GetNotebooks(getUserID(c)); err != nil {
 		global.SYS_LOG.Error("获取失败!", zap.Any("err", err))

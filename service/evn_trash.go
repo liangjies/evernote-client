@@ -7,7 +7,7 @@ import (
 
 //@function: RevertNote
 //@description: 用户从废纸篓恢复笔记
-//@param: id uint, uid uint
+//@param: nid uint, uid uint
 //@return: err error
 func RevertNote(nid uint, uid uint) (err error) {
 	tx := global.SYS_DB.Begin()
@@ -33,9 +33,9 @@ func RevertNote(nid uint, uid uint) (err error) {
 	return tx.Commit().Error
 }
 
-//@function: DeleteNotebook
+//@function: DeleteTrash
 //@description: 用户彻底删除笔记
-//@param: id uint, uid uint
+//@param: nid uint, uid uint
 //@return: err error
 func DeleteTrash(nid uint, uid uint) (err error) {
 	var note model.EvnNote
@@ -43,9 +43,9 @@ func DeleteTrash(nid uint, uid uint) (err error) {
 	return err
 }
 
-//@function: GetNotebooks
-//@description: 用户获取废纸篓
-//@param: nid uint, uid uint
+//@function: GetTrashs
+//@description: 获取所有废纸篓笔记
+//@param: uid uint
 //@return: err error, list interface{}, total int64
 func GetTrashs(uid uint) (err error, list interface{}, total int64) {
 	var noteList []model.EvnNote

@@ -27,7 +27,7 @@ func GetHistories(nid uint, uid uint) (err error, list interface{}, total int64)
 
 //@function: RecoverHistory
 //@description: 恢复笔记历史版本
-//@param: nid uint, uid uint
+//@param: vnHistory model.EvnHistory, uid uint
 //@return: err error, list interface{}, total int64
 func RecoverHistory(evnHistory model.EvnHistory, uid uint) (err error) {
 	db := global.SYS_DB.Model(&model.EvnHistory{})

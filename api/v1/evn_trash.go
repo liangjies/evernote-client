@@ -13,8 +13,8 @@ import (
 // @Summary 用户从废纸篓恢复笔记
 // @accept application/json
 // @Produce application/json
-// @Success 200 {string} string "{"success":true,"data":{},"msg":"更新成功"}"
-// @Router /notebooks [post]
+// @Success 200 {string} string "{"success":true,"data":{},"msg":"恢复成功"}"
+// @Router /trash/revert/:id [post]
 func RevertNote(c *gin.Context) {
 	oid, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
@@ -34,7 +34,7 @@ func RevertNote(c *gin.Context) {
 // @Summary 用户彻底删除笔记
 // @Produce application/json
 // @Success 200 {string} string "{"success":true,"data":{},"msg":"删除成功"}"
-// @Router /notebooks [post]
+// @Router /trash/confirm/:id [post]
 func DeleteTrash(c *gin.Context) {
 	oid, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
@@ -51,10 +51,10 @@ func DeleteTrash(c *gin.Context) {
 	}
 }
 
-// @Summary 用户获取废纸篓
+// @Summary 获取所有废纸篓笔记
 // @Produce application/json
 // @Success 200 {string} string "{"success":true,"data":{},"msg":"获取成功"}"
-// @Router /notes/from/:id [get]
+// @Router /trash/all [get]
 func GetTrashs(c *gin.Context) {
 	if err, list, total := service.GetTrashs(getUserID(c)); err != nil {
 		global.SYS_LOG.Error("获取失败!", zap.Any("err", err))
@@ -70,7 +70,7 @@ func GetTrashs(c *gin.Context) {
 // @Summary 用户根据id获取废纸篓笔记详情
 // @Produce application/json
 // @Success 200 {string} string "{"success":true,"data":{},"msg":"获取成功"}"
-// @Router /notes/from/:id [get]
+// @Router /trash/:id [get]
 func GetTrashById(c *gin.Context) {
 	oid, err := strconv.Atoi(c.Param("id"))
 	if err != nil {

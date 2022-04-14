@@ -17,7 +17,7 @@ import (
 // @Produce  application/json
 // @Param file formData file true "上传文件示例"
 // @Success 200 {string} string "{"success":true,"data":{},"msg":"上传成功"}"
-// @Router /fileUploadAndDownload/upload [post]
+// @Router /upload [post]
 func UploadFile(c *gin.Context) {
 	var file model.FileUpload
 	noSave := c.DefaultQuery("noSave", "0")

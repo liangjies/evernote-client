@@ -6,9 +6,9 @@ import (
 	"evernote-client/utils"
 )
 
-//@function: DeleteNotebook
-//@description: 用户删除笔记本
-//@param: id uint, uid uint
+//@function: DeleteNote
+//@description: 用户删除笔记
+//@param: nid uint, uid uint
 //@return: err error
 func DeleteNote(nid uint, uid uint) (err error) {
 	tx := global.SYS_DB.Begin()
@@ -26,7 +26,7 @@ func DeleteNote(nid uint, uid uint) (err error) {
 
 //@function: UpdateNote
 //@description: 用户修改笔记
-//@param: n model.EvnNote, nid uint, uid uint
+//@param: n model.EvnNote, uid uint
 //@return: err error
 func UpdateNote(n model.EvnNote, uid uint) (err error) {
 	db := global.SYS_DB.Model(&model.EvnNote{})
@@ -75,8 +75,8 @@ func UpdateNote(n model.EvnNote, uid uint) (err error) {
 
 //@function: CreateNote
 //@description: 用户新建笔记
-//@param: n model.EvnNote, nid uint, uid uint
-//@return: err error
+//@param: n model.EvnNote, uid uint
+//@return: id uint, err error
 func CreateNote(n model.EvnNote, uid uint) (id uint, err error) {
 	tx := global.SYS_DB.Begin()
 	n.CreateBy = uid
@@ -106,8 +106,8 @@ func CreateNote(n model.EvnNote, uid uint) (id uint, err error) {
 	return n.ID, tx.Commit().Error
 }
 
-//@function: 获取笔记本笔记列表
-//@description: 用户获取笔记列表
+//@function: GetNotes
+//@description: 获取笔记本笔记列表
 //@param: nid uint, uid uint
 //@return: err error, list interface{}, total int64
 func GetNotes(nid uint, uid uint) (err error, list interface{}, total int64, title string) {
@@ -119,10 +119,10 @@ func GetNotes(nid uint, uid uint) (err error, list interface{}, total int64, tit
 	return err, noteList, total, title
 }
 
-//@function: GetNotebooks
+//@function: GetNoteById
 //@description: 用户根据id获取笔记详情
 //@param: nid uint, uid uint
-//@return: err error, list interface{}, total int64
+//@return: err error, list interface{}
 func GetNoteById(nid uint, uid uint) (err error, list interface{}) {
 	var noteList []model.EvnNote
 	db := global.SYS_DB.Model(&model.EvnNote{})
@@ -130,10 +130,10 @@ func GetNoteById(nid uint, uid uint) (err error, list interface{}) {
 	return err, noteList
 }
 
-// @Summary 用户获取笔记列表
-// @Produce application/json
-// @Success 200 {string} string "{"success":true,"data":{},"msg":"获取成功"}"
-// @Router /notes [get]
+//@function: GetAllNotes
+//@description: 获取所有笔记
+//@param: uid uint
+//@return: err error, list interface{}, total int64
 func GetAllNotes(uid uint) (err error, list interface{}, total int64) {
 	var noteList []model.EvnNote
 	db := global.SYS_DB.Model(&model.EvnNote{})
@@ -142,10 +142,10 @@ func GetAllNotes(uid uint) (err error, list interface{}, total int64) {
 	return err, noteList, total
 }
 
-// @Summary 搜索笔记
-// @Produce application/json
-// @Success 200 {string} string "{"success":true,"data":{},"msg":"获取成功"}"
-// @Router /notes/search [post]
+//@function: SearchNote
+//@description: 搜索笔记
+//@param: SearchKey string, NotebookId uint, uid uint
+//@return: err error, list interface{}, total int64
 func SearchNote(SearchKey string, NotebookId uint, uid uint) (err error, list interface{}, total int64) {
 	var noteList []model.EvnNote
 	db := global.SYS_DB.Model(&model.EvnNote{})

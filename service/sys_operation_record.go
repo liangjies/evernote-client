@@ -6,7 +6,6 @@ import (
 	"evernote-client/model/request"
 )
 
-//@author: [granty1](https://github.com/granty1)
 //@function: CreateSysOperationRecord
 //@description: 创建记录
 //@param: sysOperationRecord model.SysOperationRecord
@@ -17,8 +16,6 @@ func CreateSysOperationRecord(sysOperationRecord model.SysOperationRecord) (err 
 	return err
 }
 
-//@author: [granty1](https://github.com/granty1)
-//@author: [piexlmax](https://github.com/piexlmax)
 //@function: DeleteSysOperationRecordByIds
 //@description: 批量删除记录
 //@param: ids request.IdsReq
@@ -29,7 +26,6 @@ func DeleteSysOperationRecordByIds(ids request.IdsReq) (err error) {
 	return err
 }
 
-//@author: [granty1](https://github.com/granty1)
 //@function: DeleteSysOperationRecord
 //@description: 删除操作记录
 //@param: sysOperationRecord model.SysOperationRecord
@@ -40,7 +36,6 @@ func DeleteSysOperationRecord(sysOperationRecord model.SysOperationRecord) (err 
 	return err
 }
 
-//@author: [granty1](https://github.com/granty1)
 //@function: DeleteSysOperationRecord
 //@description: 根据id获取单条操作记录
 //@param: id uint
@@ -51,8 +46,6 @@ func GetSysOperationRecord(id uint) (err error, sysOperationRecord model.SysOper
 	return
 }
 
-//@author: [granty1](https://github.com/granty1)
-//@author: [piexlmax](https://github.com/piexlmax)
 //@function: GetSysOperationRecordInfoList
 //@description: 分页获取操作记录列表
 //@param: info request.SysOperationRecordSearch
