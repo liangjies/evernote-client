@@ -59,7 +59,6 @@ func UpdateNote(c *gin.Context) {
 // @Success 200 {string} string "{"success":true,"data":{},"msg":"创建成功"}"
 // @Router /notes/add [post]
 func CreateNote(c *gin.Context) {
-
 	var note model.EvnNote
 	_ = c.ShouldBindJSON(&note)
 	if err := utils.Verify(note, utils.NoteTitleVerify); err != nil {

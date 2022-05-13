@@ -54,9 +54,7 @@ func Login(c *gin.Context) {
 		}
 	} else {
 		response.FailWithMessage("验证码错误", c)
-
 	}
-
 }
 
 // @Tags Base
