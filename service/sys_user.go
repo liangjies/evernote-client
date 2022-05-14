@@ -47,18 +47,6 @@ func Logout(jwtList model.JwtBlacklist) (err error) {
 	return
 }
 
-//@function: ChangePassword
-//@description: 修改用户密码
-//@param: u *model.SysUser, newPassword string
-//@return: err error, userInter *model.SysUser
-
-func ChangePassword(u *model.SysUser, newPassword string) (err error, userInter *model.SysUser) {
-	var user model.SysUser
-	u.Password = utils.MD5V([]byte(u.Password))
-	err = global.SYS_DB.Where("username = ? AND password = ?", u.Username, u.Password).First(&user).Update("password", utils.MD5V([]byte(newPassword))).Error
-	return err, u
-}
-
 //@function: SetUserInfo
 //@description: 设置用户信息
 //@param: reqUser model.SysUser

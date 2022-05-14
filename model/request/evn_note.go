@@ -1,7 +1,7 @@
 package request
 
-// 查询及排序结构体
-type SearchNoteParams struct {
-	SearchKey  string `json:"searchKey"`  // 搜索词
-	NotebookId uint   `json:"notebookId"` // 笔记所属笔记本
+// 用户修改密码
+type ChangePassword struct {
+	OldPass string `json:"oldPass"` // 旧密码
+	NewPass string `json:"newPass"` // 新密码
 }
