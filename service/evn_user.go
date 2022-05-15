@@ -5,6 +5,9 @@ import (
 	"evernote-client/model"
 	"evernote-client/model/request"
 	"evernote-client/utils"
+	"evernote-client/utils/upload"
+	"mime/multipart"
+	"strings"
 )
 
 //@function: UpdateNickName
@@ -26,4 +29,38 @@ func ChangePassword(uid uint, passWord request.ChangePassword) (err error) {
 	var user model.SysUser
 	err = db.Where("id = ? AND password = ?", uid, utils.MD5V([]byte(passWord.OldPass))).First(&user).Update("password", utils.MD5V([]byte(passWord.NewPass))).Error
 	return err
+}
+
+//@function: UpdateAvatar
+//@description: 更新用户头像
+//@param: file model.FileUpload
+//@return: error
+func UpdateAvatar(uid uint, file model.FileUpload) (err error) {
+	db := global.SYS_DB.Model(&model.SysUser{})
+	var user model.SysUser
+	err = db.Where("id = ?", uid).First(&user).Update("headerimg", file.Url).Error
+	return err
+}
+
+//@function: UploadAvatar
+//@description: 根据配置文件判断是文件上传到本地或者七牛云
+//@param: header *multipart.FileHeader, noSave string
+//@return: err error, file model.ExaFileUploadAndDownload
+func UploadAvatar(uid uint, header *multipart.FileHeader, noSave string) (err error, file model.FileUpload) {
+	oss := upload.NewOss()
+	filePath, key, uploadErr := oss.UploadFile(header)
+	if uploadErr != nil {
+		panic(err)
+	}
+	if noSave == "0" {
+		s := strings.Split(header.Filename, ".")
+		f := model.FileUpload{
+			Url:  filePath,
+			Name: header.Filename,
+			Tag:  s[len(s)-1],
+			Key:  key,
+		}
+		return UpdateAvatar(uid, f), f
+	}
+	return
 }

@@ -5,7 +5,10 @@ import (
 	"errors"
 	"evernote-client/global"
 	"fmt"
+	"math/rand"
 	"mime/multipart"
+	"path"
+	"strings"
 	"time"
 
 	"github.com/qiniu/api.v7/v7/auth/qbox"
@@ -39,8 +42,10 @@ func (*Qiniu) UploadFile(file *multipart.FileHeader) (string, string, error) {
 
 		return "", "", errors.New("function file.Open() Filed, err:" + openError.Error())
 	}
-	defer f.Close()                                                                                         // 创建文件 defer 关闭
-	fileKey := fmt.Sprintf("%s/%d%s", global.SYS_CONFIG.Qiniu.PathPrefix, time.Now().Unix(), file.Filename) // 文件名格式 自己可以改 建议保证唯一性
+	defer f.Close() // 创建文件 defer 关闭
+	rand.Seed(time.Now().UnixNano())
+	fileExt := strings.ToLower(path.Ext(file.Filename))
+	fileKey := fmt.Sprintf("%s/%d%d%s", global.SYS_CONFIG.Qiniu.PathPrefix, time.Now().Unix(), rand.Intn(91)+10, fileExt) // 文件名格式 自己可以改 建议保证唯一性
 	putErr := formUploader.Put(context.Background(), &ret, upToken, fileKey, f, file.Size, &putExtra)
 	if putErr != nil {
 		global.SYS_LOG.Error("function formUploader.Put() Filed", zap.Any("err", putErr.Error()))

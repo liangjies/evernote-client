@@ -50,3 +50,27 @@ func ChangePassword(c *gin.Context) {
 		response.OkWithMessage("修改成功", c)
 	}
 }
+
+// @Tags User
+// @Summary 用户上传头像
+// @Produce  application/json
+// @Param file File
+// @Success 200 {string} string "{"success":true,"data":{},"msg":"上传成功"}"
+// @Router /user/uploadAvatar [post]
+func UploadAvatar(c *gin.Context) {
+	var file model.FileUpload
+	noSave := c.DefaultQuery("noSave", "0")
+	_, header, err := c.Request.FormFile("file")
+	if err != nil {
+		global.SYS_LOG.Error("接收文件失败!", zap.Any("err", err))
+		response.FailWithMessage("接收文件失败", c)
+		return
+	}
+	err, file = service.UploadAvatar(getUserID(c), header, noSave) // 文件上传后拿到文件路径
+	if err != nil {
+		global.SYS_LOG.Error("修改数据库链接失败!", zap.Any("err", err))
+		response.FailWithMessage("修改数据库链接失败", c)
+		return
+	}
+	response.OkWithDetailed(response.FileUploadResponse{File: file}, "上传成功", c)
+}
