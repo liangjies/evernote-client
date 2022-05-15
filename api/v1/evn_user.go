@@ -74,3 +74,23 @@ func UploadAvatar(c *gin.Context) {
 	}
 	response.OkWithDetailed(response.FileUploadResponse{File: file}, "上传成功", c)
 }
+
+// @Summary 用户修改邮箱
+// @Produce application/json
+// @Success 200 {string} string "{"success":true,"data":{},"msg":"修改成功"}"
+// @Router /user/email [PATCH]
+func UpdateEmail(c *gin.Context) {
+	var user request.ChangeEmail
+	err := c.ShouldBindJSON(&user)
+	if err != nil || user.Email == "" || user.PassWord == "" {
+		response.FailWithMessage("参数错误", c)
+		return
+	}
+
+	if err := service.UpdateEmail(getUserID(c), user); err != nil {
+		global.SYS_LOG.Error("修改失败!", zap.Any("err", err))
+		response.FailWithMessage("修改失败，密码与当前账户不符", c)
+	} else {
+		response.OkWithMessage("修改成功", c)
+	}
+}

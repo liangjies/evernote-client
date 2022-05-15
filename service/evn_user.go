@@ -64,3 +64,14 @@ func UploadAvatar(uid uint, header *multipart.FileHeader, noSave string) (err er
 	}
 	return
 }
+
+//@function: UpdateEmail
+//@description: 用户修改邮箱
+//@param: u *model.SysUser, newPassword string
+//@return: err error, userInter *model.SysUser
+func UpdateEmail(uid uint, user request.ChangeEmail) (err error) {
+	db := global.SYS_DB.Model(&model.SysUser{})
+	var SysUser model.SysUser
+	err = db.Where("id = ? AND password = ?", uid, utils.MD5V([]byte(user.PassWord))).First(&SysUser).Update("email", user.Email).Error
+	return err
+}
