@@ -7,6 +7,9 @@
 Gin、Gorm、MySQL、Redis、JWT、Zap
 
 #### 项目演示
+
+[点击预览](http://note.icewx.com/Login)
+
 ##### 登录注册
 
 ![](https://icewx-1251138640.cos.ap-guangzhou.myqcloud.com/github%2Fevernote-client%2F%E5%BE%AE%E4%BF%A1%E6%88%AA%E5%9B%BE_20220524145721.png)
@@ -43,6 +46,7 @@ Gin、Gorm、MySQL、Redis、JWT、Zap
 13.  查找笔记本（4-9完成）
 14.  网页标题（4-9完成）
 15.  设置（5-13完成修改昵称）（5-14完成修改密码）（5-15完成上传头像、更改邮箱）
-16.  多点登录
-17.  自动保存
-18.  笔记列表伸缩
+16.  多点登录（5-29完成）
+17.  未保存提示（5-28完成）（5-28完成切换笔记自动保存）（5-29完成 Ctrl + S保存功能）
+18.  笔记列表伸缩（5-28完成）
+19.  Redis 缓存数据
