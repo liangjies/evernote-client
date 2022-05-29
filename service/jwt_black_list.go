@@ -32,11 +32,12 @@ func IsBlacklist(jwt string) bool {
 
 //@function: GetRedisJWT
 //@description: 从redis取jwt
-//@param: userName string
+//@param: prefix + userName string
 //@return: err error, redisJWT string
 
 func GetRedisJWT(userName string) (err error, redisJWT string) {
-	redisJWT, err = global.SYS_REDIS.Get(userName).Result()
+	prefix := global.SYS_CONFIG.Redis.Prefix
+	redisJWT, err = global.SYS_REDIS.Get(prefix + userName).Result()
 	return err, redisJWT
 }
 
@@ -46,8 +47,9 @@ func GetRedisJWT(userName string) (err error, redisJWT string) {
 //@return: err error
 
 func SetRedisJWT(jwt string, userName string) (err error) {
+	prefix := global.SYS_CONFIG.Redis.Prefix
 	// 此处过期时间等于jwt过期时间
 	timer := time.Duration(global.SYS_CONFIG.JWT.ExpiresTime) * time.Second
-	err = global.SYS_REDIS.Set(userName, jwt, timer).Err()
+	err = global.SYS_REDIS.Set(prefix+userName, jwt, timer).Err()
 	return err
 }

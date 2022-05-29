@@ -5,7 +5,6 @@
 *.so
 *.dylib
 *.log
-config.yaml
 # Test binary, built with `go test -c`
 *.test
 
@@ -15,3 +14,4 @@ config.yaml
 # Dependency directories (remove the comment below to include it)
 # vendor/
 log/
+/config.yaml

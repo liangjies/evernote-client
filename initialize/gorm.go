@@ -61,7 +61,7 @@ func GormMysql() *gorm.DB {
 		SkipInitializeWithVersion: false, // 根据版本自动配置
 	}
 	if db, err := gorm.Open(mysql.New(mysqlConfig), gormConfig()); err != nil {
-		//global.SYS_LOG.Error("MySQL启动异常", zap.Any("err", err))
+		panic("MySQL连接失败")
 		return nil
 	} else {
 		sqlDB, _ := db.DB()

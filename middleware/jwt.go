@@ -12,6 +12,7 @@ import (
 
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
+	"github.com/go-redis/redis"
 	"go.uber.org/zap"
 )
 
@@ -24,17 +25,20 @@ func JWTAuth() gin.HandlerFunc {
 			c.Abort()
 			return
 		}
-		if service.IsBlacklist(token) {
-			response.FailWithDetailed(gin.H{"reload": true}, "您的帐户异地登陆或令牌失效", c)
-			c.Abort()
-			return
+		// 黑名单模式
+		if !global.SYS_CONFIG.System.UseMultipoint {
+			if service.IsBlacklist(token) {
+				response.FailWithDetailed(gin.H{"reload": true}, "您的帐户异地登陆或令牌失效", c)
+				c.Abort()
+				return
+			}
 		}
+
 		j := NewJWT()
 		// parseToken 解析token包含的信息
 		claims, err := j.ParseToken(token)
 
 		if err != nil {
-
 			if err == TokenExpired {
 				response.FailWithDetailed(gin.H{"reload": true}, "授权已过期", c)
 				c.Abort()
@@ -44,11 +48,30 @@ func JWTAuth() gin.HandlerFunc {
 			c.Abort()
 			return
 		}
-		if err, _ = service.FindUserByUuid(claims.UUID.String()); err != nil {
-			_ = service.JsonInBlacklist(model.JwtBlacklist{Jwt: token})
-			response.FailWithDetailed(gin.H{"reload": true}, err.Error(), c)
-			c.Abort()
+		// 多点模式查询Redis
+		if global.SYS_CONFIG.System.UseMultipoint {
+			if err, jwtStr := service.GetRedisJWT(claims.UUID.String()); err == redis.Nil {
+				response.FailWithDetailed(gin.H{"reload": true}, "您的帐户异地登陆或令牌失效", c)
+				c.Abort()
+				return
+			} else {
+				if jwtStr != token {
+					response.FailWithDetailed(gin.H{"reload": true}, "您的帐户异地登陆或令牌失效", c)
+					c.Abort()
+					return
+				}
+			}
 		}
+
+		if !global.SYS_CONFIG.System.UseMultipoint {
+			if err, _ = service.FindUserByUuid(claims.UUID.String()); err != nil {
+				_ = service.JsonInBlacklist(model.JwtBlacklist{Jwt: token})
+				response.FailWithDetailed(gin.H{"reload": true}, err.Error(), c)
+				c.Abort()
+			}
+		}
+
+		// token换新
 		if claims.ExpiresAt-time.Now().Unix() < claims.BufferTime {
 			claims.ExpiresAt = time.Now().Unix() + global.SYS_CONFIG.JWT.ExpiresTime
 			newToken, _ := j.CreateTokenByOldToken(token, *claims)
@@ -56,7 +79,7 @@ func JWTAuth() gin.HandlerFunc {
 			c.Header("new-token", newToken)
 			c.Header("new-expires-at", strconv.FormatInt(newClaims.ExpiresAt, 10))
 			if global.SYS_CONFIG.System.UseMultipoint {
-				err, RedisJwtToken := service.GetRedisJWT(newClaims.Username)
+				err, RedisJwtToken := service.GetRedisJWT(newClaims.UUID.String())
 				if err != nil {
 					global.SYS_LOG.Error("get redis jwt failed", zap.Any("err", err))
 				} else { // 当之前的取成功时才进行拉黑操作

@@ -76,6 +76,22 @@ func Logout(c *gin.Context) {
 
 // 登录以后签发jwt
 func tokenNext(c *gin.Context, user model.SysUser) {
+	// 多点登录
+	if global.SYS_CONFIG.System.UseMultipoint {
+		if err, jwtStr := service.GetRedisJWT(user.UUID.String()); err != redis.Nil {
+			j := middleware.NewJWT()
+			claims, err := j.ParseToken(jwtStr)
+			if err == nil {
+				response.OkWithDetailed(response.LoginResponse{
+					User:      user,
+					Token:     jwtStr,
+					ExpiresAt: claims.StandardClaims.ExpiresAt * 1000,
+				}, "登录成功", c)
+				return
+			}
+		}
+	}
+
 	j := &middleware.JWT{SigningKey: []byte(global.SYS_CONFIG.JWT.SigningKey)} // 唯一签名
 	claims := request.CustomClaims{
 		UUID:       user.UUID,
@@ -102,8 +118,8 @@ func tokenNext(c *gin.Context, user model.SysUser) {
 		}, "登录成功", c)
 		return
 	}
-	if err, jwtStr := service.GetRedisJWT(user.Username); err == redis.Nil {
-		if err := service.SetRedisJWT(token, user.Username); err != nil {
+	if err, jwtStr := service.GetRedisJWT(user.UUID.String()); err == redis.Nil {
+		if err := service.SetRedisJWT(token, user.UUID.String()); err != nil {
 			global.SYS_LOG.Error("设置登录状态失败!", zap.Any("err", err))
 			response.FailWithMessage("设置登录状态失败", c)
 			return

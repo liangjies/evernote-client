@@ -46,10 +46,10 @@ func UpdateNote(c *gin.Context) {
 		return
 	}
 	if err := service.UpdateNote(note, getUserID(c)); err != nil {
-		global.SYS_LOG.Error("更新失败!", zap.Any("err", err))
-		response.FailWithMessage("更新失败", c)
+		global.SYS_LOG.Error("保存失败!", zap.Any("err", err))
+		response.FailWithMessage("保存失败", c)
 	} else {
-		response.OkWithMessage("更新成功", c)
+		response.OkWithMessage("保存成功", c)
 	}
 }
 

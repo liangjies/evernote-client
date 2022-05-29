@@ -15,7 +15,10 @@ type server interface {
 
 func RunServer() {
 	Router := initialize.Routers()
-
+	if global.SYS_CONFIG.System.UseMultipoint {
+		// 初始化redis服务
+		initialize.Redis()
+	}
 	//Router.Static("/form-generator", "./resource/page")
 
 	address := fmt.Sprintf(":%d", global.SYS_CONFIG.System.Addr)
