@@ -114,7 +114,13 @@ func GetNotes(nid uint, uid uint) (err error, list interface{}, total int64, tit
 	var noteList []model.EvnNote
 	db := global.SYS_DB.Model(&model.EvnNote{})
 	err = db.Select("CreatedAt", "UpdatedAt", "ID", "Title", "NotebookId").Where("notebook_id = ? AND create_by = ? AND del_flag=0", nid, uid).Order("updated_at desc").Find(&noteList).Error
+	if err != nil {
+		return
+	}
 	err = db.Count(&total).Error
+	if err != nil {
+		return
+	}
 	err = global.SYS_DB.Model(&model.EvnNotebook{}).Select("Title").Where("id = ? AND create_by = ?", nid, uid).First(&title).Error
 	return err, noteList, total, title
 }
@@ -138,6 +144,9 @@ func GetAllNotes(uid uint) (err error, list interface{}, total int64) {
 	var noteList []model.EvnNote
 	db := global.SYS_DB.Model(&model.EvnNote{})
 	err = db.Select("CreatedAt", "UpdatedAt", "ID", "Title", "Snippet").Where("create_by = ? AND del_flag=0", uid).Order("updated_at desc").Find(&noteList).Error
+	if err != nil {
+		return err, noteList, total
+	}
 	err = db.Count(&total).Error
 	return err, noteList, total
 }
@@ -150,6 +159,7 @@ func SearchNote(SearchKey string, NotebookId uint, uid uint) (err error, list in
 	var noteList []model.EvnNote
 	db := global.SYS_DB.Model(&model.EvnNote{})
 	db.Where("del_flag = 0")
+	db.Where("create_by = ?", uid)
 	if NotebookId != 0 {
 		db.Where("notebook_id = ?", NotebookId)
 	}
@@ -159,6 +169,9 @@ func SearchNote(SearchKey string, NotebookId uint, uid uint) (err error, list in
 	}
 
 	err = db.Select("CreatedAt", "UpdatedAt", "ID", "Title", "Snippet").Order("updated_at desc").Find(&noteList).Error
+	if err != nil {
+		return err, noteList, total
+	}
 	err = db.Count(&total).Error
 	return err, noteList, total
 }
