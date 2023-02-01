@@ -8,7 +8,7 @@ import (
 )
 
 func Redis() {
-	redisCfg := global.SYS_CONFIG.Redis
+	redisCfg := global.CONFIG.Redis
 	client := redis.NewClient(&redis.Options{
 		Addr:     redisCfg.Addr,
 		Password: redisCfg.Password, // no password set
@@ -16,9 +16,9 @@ func Redis() {
 	})
 	pong, err := client.Ping().Result()
 	if err != nil {
-		global.SYS_LOG.Error("redis connect ping failed, err:", zap.Any("err", err))
+		global.LOG.Error("redis connect ping failed, err:", zap.Any("err", err))
 	} else {
-		global.SYS_LOG.Info("redis connect ping response:", zap.String("pong", pong))
-		global.SYS_REDIS = client
+		global.LOG.Info("redis connect ping response:", zap.String("pong", pong))
+		global.REDIS = client
 	}
 }

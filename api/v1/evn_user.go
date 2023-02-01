@@ -24,7 +24,7 @@ func UpdateNickName(c *gin.Context) {
 	}
 
 	if err := service.UpdateNickName(getUserID(c), user.NickName); err != nil {
-		global.SYS_LOG.Error("修改失败!", zap.Any("err", err))
+		global.LOG.Error("修改失败!", zap.Any("err", err))
 		response.FailWithMessage("修改失败！"+err.Error(), c)
 	} else {
 		response.OkWithMessage("修改成功", c)
@@ -44,7 +44,7 @@ func ChangePassword(c *gin.Context) {
 	}
 
 	if err := service.ChangePassword(getUserID(c), passWord); err != nil {
-		global.SYS_LOG.Error("修改失败!", zap.Any("err", err))
+		global.LOG.Error("修改失败!", zap.Any("err", err))
 		response.FailWithMessage("修改失败，原密码与当前账户不符", c)
 	} else {
 		response.OkWithMessage("修改成功", c)
@@ -58,17 +58,17 @@ func ChangePassword(c *gin.Context) {
 // @Success 200 {string} string "{"success":true,"data":{},"msg":"上传成功"}"
 // @Router /user/uploadAvatar [post]
 func UploadAvatar(c *gin.Context) {
-	var file model.FileUpload
+	var file model.EvnUpload
 	noSave := c.DefaultQuery("noSave", "0")
 	_, header, err := c.Request.FormFile("file")
 	if err != nil {
-		global.SYS_LOG.Error("接收文件失败!", zap.Any("err", err))
+		global.LOG.Error("接收文件失败!", zap.Any("err", err))
 		response.FailWithMessage("接收文件失败", c)
 		return
 	}
 	err, file = service.UploadAvatar(getUserID(c), header, noSave) // 文件上传后拿到文件路径
 	if err != nil {
-		global.SYS_LOG.Error("修改数据库链接失败!", zap.Any("err", err))
+		global.LOG.Error("修改数据库链接失败!", zap.Any("err", err))
 		response.FailWithMessage("修改数据库链接失败", c)
 		return
 	}
@@ -88,7 +88,7 @@ func UpdateEmail(c *gin.Context) {
 	}
 
 	if err := service.UpdateEmail(getUserID(c), user); err != nil {
-		global.SYS_LOG.Error("修改失败!", zap.Any("err", err))
+		global.LOG.Error("修改失败!", zap.Any("err", err))
 		response.FailWithMessage("修改失败，密码与当前账户不符", c)
 	} else {
 		response.OkWithMessage("修改成功", c)

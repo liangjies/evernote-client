@@ -6,12 +6,12 @@ import (
 	"evernote-client/utils"
 )
 
-//@function: DeleteNote
-//@description: 用户删除笔记
-//@param: nid uint, uid uint
-//@return: err error
+// @function: DeleteNote
+// @description: 用户删除笔记
+// @param: nid uint, uid uint
+// @return: err error
 func DeleteNote(nid uint, uid uint) (err error) {
-	tx := global.SYS_DB.Begin()
+	tx := global.DB.Begin()
 	var note model.EvnNote
 	err = tx.Where("id = ? AND create_by = ? AND del_flag=0", nid, uid).First(&note).Update("del_flag", 1).Error
 	if err == nil {
@@ -24,12 +24,12 @@ func DeleteNote(nid uint, uid uint) (err error) {
 	return tx.Commit().Error
 }
 
-//@function: UpdateNote
-//@description: 用户修改笔记
-//@param: n model.EvnNote, uid uint
-//@return: err error
+// @function: UpdateNote
+// @description: 用户修改笔记
+// @param: n model.EvnNote, uid uint
+// @return: err error
 func UpdateNote(n model.EvnNote, uid uint) (err error) {
-	db := global.SYS_DB.Model(&model.EvnNote{})
+	db := global.DB.Model(&model.EvnNote{})
 	var note model.EvnNote
 
 	// 生成笔记片段
@@ -58,27 +58,27 @@ func UpdateNote(n model.EvnNote, uid uint) (err error) {
 		row.Scan(&version, &versionCount, &versionMin)
 
 		history := model.EvnHistory{NoteId: n.ID, Content: n.Content, Version: version + 1}
-		err = global.SYS_DB.Model(&model.EvnHistory{}).Create(&history).Error
+		err = global.DB.Model(&model.EvnHistory{}).Create(&history).Error
 
 		// 历史记录保存限制
 		var VersionMax uint = 20
-		if global.SYS_CONFIG.System.VersionMax != 0 {
-			VersionMax = global.SYS_CONFIG.System.VersionMax
+		if global.CONFIG.System.VersionMax != 0 {
+			VersionMax = global.CONFIG.System.VersionMax
 		}
 		if versionCount > VersionMax {
-			err = global.SYS_DB.Model(&model.EvnHistory{}).Where("note_id=? AND version=?", n.ID, versionMin).Delete(&model.EvnHistory{}).Error
+			err = global.DB.Model(&model.EvnHistory{}).Where("note_id=? AND version=?", n.ID, versionMin).Delete(&model.EvnHistory{}).Error
 		}
 	}
 
 	return err
 }
 
-//@function: CreateNote
-//@description: 用户新建笔记
-//@param: n model.EvnNote, uid uint
-//@return: id uint, err error
+// @function: CreateNote
+// @description: 用户新建笔记
+// @param: n model.EvnNote, uid uint
+// @return: id uint, err error
 func CreateNote(n model.EvnNote, uid uint) (id uint, err error) {
-	tx := global.SYS_DB.Begin()
+	tx := global.DB.Begin()
 	n.CreateBy = uid
 
 	// 生成笔记片段
@@ -106,13 +106,13 @@ func CreateNote(n model.EvnNote, uid uint) (id uint, err error) {
 	return n.ID, tx.Commit().Error
 }
 
-//@function: GetNotes
-//@description: 获取笔记本笔记列表
-//@param: nid uint, uid uint
-//@return: err error, list interface{}, total int64
+// @function: GetNotes
+// @description: 获取笔记本笔记列表
+// @param: nid uint, uid uint
+// @return: err error, list interface{}, total int64
 func GetNotes(nid uint, uid uint) (err error, list interface{}, total int64, title string) {
 	var noteList []model.EvnNote
-	db := global.SYS_DB.Model(&model.EvnNote{})
+	db := global.DB.Model(&model.EvnNote{})
 	err = db.Select("CreatedAt", "UpdatedAt", "ID", "Title", "NotebookId").Where("notebook_id = ? AND create_by = ? AND del_flag=0", nid, uid).Order("updated_at desc").Find(&noteList).Error
 	if err != nil {
 		return
@@ -121,28 +121,28 @@ func GetNotes(nid uint, uid uint) (err error, list interface{}, total int64, tit
 	if err != nil {
 		return
 	}
-	err = global.SYS_DB.Model(&model.EvnNotebook{}).Select("Title").Where("id = ? AND create_by = ?", nid, uid).First(&title).Error
+	err = global.DB.Model(&model.EvnNotebook{}).Select("Title").Where("id = ? AND create_by = ?", nid, uid).First(&title).Error
 	return err, noteList, total, title
 }
 
-//@function: GetNoteById
-//@description: 用户根据id获取笔记详情
-//@param: nid uint, uid uint
-//@return: err error, list interface{}
+// @function: GetNoteById
+// @description: 用户根据id获取笔记详情
+// @param: nid uint, uid uint
+// @return: err error, list interface{}
 func GetNoteById(nid uint, uid uint) (err error, list interface{}) {
 	var noteList []model.EvnNote
-	db := global.SYS_DB.Model(&model.EvnNote{})
+	db := global.DB.Model(&model.EvnNote{})
 	err = db.Where("id = ? AND create_by = ? AND del_flag=0", nid, uid).Find(&noteList).Error
 	return err, noteList
 }
 
-//@function: GetAllNotes
-//@description: 获取所有笔记
-//@param: uid uint
-//@return: err error, list interface{}, total int64
+// @function: GetAllNotes
+// @description: 获取所有笔记
+// @param: uid uint
+// @return: err error, list interface{}, total int64
 func GetAllNotes(uid uint) (err error, list interface{}, total int64) {
 	var noteList []model.EvnNote
-	db := global.SYS_DB.Model(&model.EvnNote{})
+	db := global.DB.Model(&model.EvnNote{})
 	err = db.Select("CreatedAt", "UpdatedAt", "ID", "Title", "Snippet").Where("create_by = ? AND del_flag=0", uid).Order("updated_at desc").Find(&noteList).Error
 	if err != nil {
 		return err, noteList, total
@@ -151,13 +151,13 @@ func GetAllNotes(uid uint) (err error, list interface{}, total int64) {
 	return err, noteList, total
 }
 
-//@function: SearchNote
-//@description: 搜索笔记
-//@param: SearchKey string, NotebookId uint, uid uint
-//@return: err error, list interface{}, total int64
+// @function: SearchNote
+// @description: 搜索笔记
+// @param: SearchKey string, NotebookId uint, uid uint
+// @return: err error, list interface{}, total int64
 func SearchNote(SearchKey string, NotebookId uint, uid uint) (err error, list interface{}, total int64) {
 	var noteList []model.EvnNote
-	db := global.SYS_DB.Model(&model.EvnNote{})
+	db := global.DB.Model(&model.EvnNote{})
 	db.Where("del_flag = 0")
 	db.Where("create_by = ?", uid)
 	if NotebookId != 0 {

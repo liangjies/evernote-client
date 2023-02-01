@@ -8,13 +8,13 @@ import (
 )
 
 func main() {
-	core.Viper()                      // 初始化Viper
-	global.SYS_LOG = core.Zap()       // 初始化zap日志库
-	global.SYS_DB = initialize.Gorm() // gorm连接数据库
-	if global.SYS_DB != nil {
-		initialize.MysqlTables(global.SYS_DB) // 初始化表
+	core.Viper()                  // 初始化Viper
+	global.LOG = core.Zap()       // 初始化zap日志库
+	global.DB = initialize.Gorm() // gorm连接数据库
+	if global.DB != nil {
+		initialize.MysqlTables(global.DB) // 初始化表
 		// 程序结束前关闭数据库链接
-		db, _ := global.SYS_DB.DB()
+		db, _ := global.DB.DB()
 		defer db.Close()
 	}
 

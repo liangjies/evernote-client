@@ -19,12 +19,12 @@ import (
 
 func GetWriteSyncer() (zapcore.WriteSyncer, error) {
 	fileWriter, err := zaprotatelogs.New(
-		path.Join(global.SYS_CONFIG.Zap.Director, "%Y-%m-%d.log"),
-		zaprotatelogs.WithLinkName(global.SYS_CONFIG.Zap.LinkName),
+		path.Join(global.CONFIG.Zap.Director, "%Y-%m-%d.log"),
+		zaprotatelogs.WithLinkName(global.CONFIG.Zap.LinkName),
 		zaprotatelogs.WithMaxAge(7*24*time.Hour),
 		zaprotatelogs.WithRotationTime(24*time.Hour),
 	)
-	if global.SYS_CONFIG.Zap.LogInConsole {
+	if global.CONFIG.Zap.LogInConsole {
 		return zapcore.NewMultiWriteSyncer(zapcore.AddSync(os.Stdout), zapcore.AddSync(fileWriter)), err
 	}
 	return zapcore.AddSync(fileWriter), err

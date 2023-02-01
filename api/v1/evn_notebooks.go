@@ -53,11 +53,11 @@ func DeleteNotebook(c *gin.Context) {
 	id := uint(oid)
 
 	if err := service.DeleteNotebook(id, getUserID(c)); err != nil {
-		global.SYS_LOG.Error("删除失败!", zap.Any("err", err))
+		global.LOG.Error("删除失败!", zap.Any("err", err))
 		response.FailWithMessage("删除失败！"+err.Error(), c)
 	} else {
-		// 删除Redis缓存
-		_ = service.DelRedis("notebook:" + strconv.FormatUint(uint64(getUserID(c)), 10))
+		// 更新笔记本缓存
+		_ = UpdateNotebookRedis(getUserID(c))
 		// 返回数据
 		response.OkWithMessage("删除成功", c)
 	}
@@ -83,11 +83,11 @@ func UpdateNotebook(c *gin.Context) {
 		return
 	}
 	if err := service.UpdateNotebook(notebook, id, getUserID(c)); err != nil {
-		global.SYS_LOG.Error("更新失败!", zap.Any("err", err))
+		global.LOG.Error("更新失败!", zap.Any("err", err))
 		response.FailWithMessage("更新失败", c)
 	} else {
-		// 删除Redis缓存
-		_ = service.DelRedis("notebook:" + strconv.FormatUint(uint64(getUserID(c)), 10))
+		// 更新笔记本缓存
+		_ = UpdateNotebookRedis(getUserID(c))
 		// 返回数据
 		response.OkWithMessage("更新成功", c)
 	}
@@ -106,11 +106,11 @@ func CreateNotebook(c *gin.Context) {
 		return
 	}
 	if err := service.CreateNotebook(notebook, getUserID(c)); err != nil {
-		global.SYS_LOG.Error("创建失败!", zap.Any("err", err))
+		global.LOG.Error("创建失败!", zap.Any("err", err))
 		response.FailWithMessage("创建失败! "+err.Error(), c)
 	} else {
-		// 删除Redis缓存
-		_ = service.DelRedis("notebook:" + strconv.FormatUint(uint64(getUserID(c)), 10))
+		// 更新笔记本缓存
+		_ = UpdateNotebookRedis(getUserID(c))
 		// 返回数据
 		response.OkWithMessage("创建成功", c)
 	}
@@ -122,10 +122,23 @@ func CreateNotebook(c *gin.Context) {
 // @Router /notebook/get [get]
 func GetNotebooks(c *gin.Context) {
 	userID := getUserID(c)
+	if global.CONFIG.System.UseRedis == false {
+		if err, list, total := service.GetNotebooks(userID); err != nil {
+			global.LOG.Error("获取失败!", zap.Any("err", err))
+			response.FailWithMessage("获取失败", c)
+		} else {
+			response.OkWithDetailed(response.PageResult{
+				List:  list,
+				Total: total,
+			}, "获取成功", c)
+		}
+		return
+	}
+
 	// 这里做一个Redis缓存
 	if err, redisData := service.GetRedis("notebook:" + strconv.FormatUint(uint64(userID), 10)); err == redis.Nil {
 		if err, list, total := service.GetNotebooks(userID); err != nil {
-			global.SYS_LOG.Error("获取失败!", zap.Any("err", err))
+			global.LOG.Error("获取失败!", zap.Any("err", err))
 			response.FailWithMessage("获取失败", c)
 		} else {
 			// 缓存到Redis
@@ -134,7 +147,7 @@ func GetNotebooks(c *gin.Context) {
 				Total: total,
 			})
 			if err != nil {
-				global.SYS_LOG.Error("生成json字符串错误", zap.Any("err", err))
+				global.LOG.Error("生成json字符串错误", zap.Any("err", err))
 				return
 			}
 			_ = service.SetRedis("notebook:"+strconv.FormatUint(uint64(userID), 10), string(resJson), 3600)
@@ -148,7 +161,7 @@ func GetNotebooks(c *gin.Context) {
 		// Redis里有缓存直接返回
 		var result response.PageResult
 		if err := json.Unmarshal([]byte(redisData), &result); err != nil {
-			global.SYS_LOG.Error("解析失败!", zap.Any("err", err))
+			global.LOG.Error("解析失败!", zap.Any("err", err))
 		} else {
 			response.OkWithDetailed(result, "获取成功", c)
 		}
@@ -159,10 +172,34 @@ func GetNotebooks(c *gin.Context) {
 // 从Gin的Context中获取从jwt解析出来的用户ID
 func getUserID(c *gin.Context) uint {
 	if claims, exists := c.Get("claims"); !exists {
-		global.SYS_LOG.Error("从Gin的Context中获取从jwt解析出来的用户ID失败, 请检查路由是否使用jwt中间件!")
+		global.LOG.Error("从Gin的Context中获取从jwt解析出来的用户ID失败, 请检查路由是否使用jwt中间件!")
 		return 0
 	} else {
 		waitUse := claims.(*request.CustomClaims)
 		return waitUse.ID
 	}
+}
+
+func UpdateNotebookRedis(userID uint) (err error) {
+	if global.CONFIG.System.UseRedis == false {
+		return
+	}
+	err = service.DelRedis("notebook:" + strconv.FormatUint(uint64(userID), 10))
+	/*
+		if err, list, total := service.GetNotebooks(userID); err != nil {
+			global.LOG.Error("获取失败!", zap.Any("err", err))
+		} else {
+			// 缓存到Redis
+			resJson, err := json.Marshal(response.PageResult{
+				List:  list,
+				Total: total,
+			})
+			if err != nil {
+				global.LOG.Error("生成json字符串错误", zap.Any("err", err))
+				return err
+			}
+			err = service.SetRedis("notebook:"+strconv.FormatUint(uint64(userID), 10), string(resJson), 3600)
+		}
+	*/
+	return err
 }

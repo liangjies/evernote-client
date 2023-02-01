@@ -24,7 +24,7 @@ func GetHistories(c *gin.Context) {
 	nid := uint(oid)
 
 	if err, list, total := service.GetHistories(nid, getUserID(c)); err != nil {
-		global.SYS_LOG.Error("获取失败!", zap.Any("err", err))
+		global.LOG.Error("获取失败!", zap.Any("err", err))
 		response.FailWithMessage("获取失败", c)
 	} else {
 		response.OkWithDetailed(response.PageResult{
@@ -43,7 +43,7 @@ func RecoverHistory(c *gin.Context) {
 	_ = c.ShouldBindJSON(&evnHistory)
 
 	if err := service.RecoverHistory(evnHistory, getUserID(c)); err != nil {
-		global.SYS_LOG.Error("还原笔记失败!", zap.Any("err", err))
+		global.LOG.Error("还原笔记失败!", zap.Any("err", err))
 		response.FailWithMessage("还原笔记失败！"+err.Error(), c)
 	} else {
 		response.OkWithMessage("还原笔记成功", c)

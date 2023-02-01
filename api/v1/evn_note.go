@@ -26,7 +26,7 @@ func DeleteNote(c *gin.Context) {
 	nid := uint(oid)
 
 	if err := service.DeleteNote(nid, getUserID(c)); err != nil {
-		global.SYS_LOG.Error("删除失败!", zap.Any("err", err))
+		global.LOG.Error("删除失败!", zap.Any("err", err))
 		response.FailWithMessage("删除失败！"+err.Error(), c)
 	} else {
 		response.OkWithMessage("删除成功", c)
@@ -46,7 +46,7 @@ func UpdateNote(c *gin.Context) {
 		return
 	}
 	if err := service.UpdateNote(note, getUserID(c)); err != nil {
-		global.SYS_LOG.Error("保存失败!", zap.Any("err", err))
+		global.LOG.Error("保存失败!", zap.Any("err", err))
 		response.FailWithMessage("保存失败", c)
 	} else {
 		response.OkWithMessage("保存成功", c)
@@ -60,15 +60,22 @@ func UpdateNote(c *gin.Context) {
 // @Router /notes/add [post]
 func CreateNote(c *gin.Context) {
 	var note model.EvnNote
+
 	_ = c.ShouldBindJSON(&note)
-	if err := utils.Verify(note, utils.NoteTitleVerify); err != nil {
-		response.FailWithMessage(err.Error(), c)
+	if note.Title == "" && note.Content == "" {
+		response.FailWithMessage("请输入一些内容😊", c)
 		return
 	}
+	if note.Title == "" {
+		note.Title = "未命名标题"
+	}
+
 	if id, err := service.CreateNote(note, getUserID(c)); err != nil {
-		global.SYS_LOG.Error("创建失败!", zap.Any("err", err))
+		global.LOG.Error("创建失败!", zap.Any("err", err))
 		response.FailWithMessage("创建失败", c)
 	} else {
+		// 更新笔记本缓存
+		_ = UpdateNotebookRedis(getUserID(c))
 		response.OkWithDetailed(response.AddResult{ID: id}, "创建成功", c)
 	}
 }
@@ -86,7 +93,7 @@ func GetNotes(c *gin.Context) {
 	nid := uint(oid)
 
 	if err, list, total, title := service.GetNotes(nid, getUserID(c)); err != nil {
-		global.SYS_LOG.Error("获取失败!", zap.Any("err", err))
+		global.LOG.Error("获取失败!", zap.Any("err", err))
 		response.FailWithMessage("获取失败", c)
 	} else {
 		response.OkWithDetailed(response.PageResult{
@@ -109,7 +116,7 @@ func GetNoteById(c *gin.Context) {
 	nid := uint(oid)
 
 	if err, list := service.GetNoteById(nid, getUserID(c)); err != nil {
-		global.SYS_LOG.Error("获取失败!", zap.Any("err", err))
+		global.LOG.Error("获取失败!", zap.Any("err", err))
 		response.FailWithMessage("获取失败", c)
 	} else {
 		response.OkWithDetailed(response.NoteResult{
@@ -124,7 +131,7 @@ func GetNoteById(c *gin.Context) {
 // @Router /notes/all [get]
 func GetAllNotes(c *gin.Context) {
 	if err, list, total := service.GetAllNotes(getUserID(c)); err != nil {
-		global.SYS_LOG.Error("获取失败!", zap.Any("err", err))
+		global.LOG.Error("获取失败!", zap.Any("err", err))
 		response.FailWithMessage("获取失败", c)
 	} else {
 		response.OkWithDetailed(response.PageResult{
@@ -147,12 +154,13 @@ func SearchNote(c *gin.Context) {
 	}
 
 	if err, list, total := service.SearchNote(SearchParams.SearchKey, SearchParams.NotebookId, getUserID(c)); err != nil {
-		global.SYS_LOG.Error("获取失败!", zap.Any("err", err))
+		global.LOG.Error("获取失败!", zap.Any("err", err))
 		response.FailWithMessage("获取失败", c)
 	} else {
-		response.OkWithDetailed(response.PageResult{
-			List:  list,
-			Total: total,
+		response.OkWithDetailed(response.SysNoteSearchResponse{
+			List:      list,
+			SearchKey: SearchParams.SearchKey,
+			Total:     total,
 		}, "获取成功", c)
 	}
 }

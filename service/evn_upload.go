@@ -13,8 +13,8 @@ import (
 //@param: file model.ExaFileUploadAndDownload
 //@return: error
 
-func Upload(file model.FileUpload) error {
-	return global.SYS_DB.Create(&file).Error
+func Upload(file model.EvnUpload) error {
+	return global.DB.Create(&file).Error
 }
 
 //@function: UploadFile
@@ -22,7 +22,7 @@ func Upload(file model.FileUpload) error {
 //@param: header *multipart.FileHeader, noSave string
 //@return: err error, file model.ExaFileUploadAndDownload
 
-func UploadFile(header *multipart.FileHeader, noSave string) (err error, file model.FileUpload) {
+func UploadFile(header *multipart.FileHeader, noSave string) (err error, file model.EvnUpload) {
 	oss := upload.NewOss()
 	filePath, key, uploadErr := oss.UploadFile(header)
 	if uploadErr != nil {
@@ -30,7 +30,7 @@ func UploadFile(header *multipart.FileHeader, noSave string) (err error, file mo
 	}
 	if noSave == "0" {
 		s := strings.Split(header.Filename, ".")
-		f := model.FileUpload{
+		f := model.EvnUpload{
 			Url:  filePath,
 			Name: header.Filename,
 			Tag:  s[len(s)-1],

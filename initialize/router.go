@@ -18,13 +18,13 @@ func Routers() *gin.Engine {
 	var Router = gin.Default()
 	//Router.StaticFS(global.GVA_CONFIG.Local.Path, http.Dir(global.GVA_CONFIG.Local.Path)) // 为用户头像和文件提供静态地址
 	// Router.Use(middleware.LoadTls())  // 打开就能玩https了
-	global.SYS_LOG.Info("use middleware logger")
+	global.LOG.Info("use middleware logger")
 
 	// 跨域
 	Router.Use(middleware.Cors()) // 如需跨域可以打开
-	global.SYS_LOG.Info("use middleware cors")
+	global.LOG.Info("use middleware cors")
 	Router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
-	global.SYS_LOG.Info("register swagger handler")
+	global.LOG.Info("register swagger handler")
 	// 方便统一添加路由组前缀 多服务器上线使用
 
 	PublicGroup := Router.Group("")
@@ -42,7 +42,7 @@ func Routers() *gin.Engine {
 		router.InitTrashRouter(PrivateGroup)    // 注册废纸篓路由
 		router.InitUtilsRouter(PrivateGroup)    // 注册工具类路由
 	}
-	global.SYS_LOG.Info("router register success")
+	global.LOG.Info("router register success")
 
 	return Router
 }

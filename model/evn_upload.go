@@ -4,7 +4,7 @@ import (
 	"evernote-client/global"
 )
 
-type FileUpload struct {
+type EvnUpload struct {
 	global.SYS_MODEL
 	Name string `json:"name" gorm:"comment:文件名"` // 文件名
 	Url  string `json:"url" gorm:"comment:文件地址"` // 文件地址

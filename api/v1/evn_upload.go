@@ -19,17 +19,17 @@ import (
 // @Success 200 {string} string "{"success":true,"data":{},"msg":"上传成功"}"
 // @Router /upload [post]
 func UploadFile(c *gin.Context) {
-	var file model.FileUpload
+	var file model.EvnUpload
 	noSave := c.DefaultQuery("noSave", "0")
 	_, header, err := c.Request.FormFile("file")
 	if err != nil {
-		global.SYS_LOG.Error("接收文件失败!", zap.Any("err", err))
+		global.LOG.Error("接收文件失败!", zap.Any("err", err))
 		response.FailWithMessage("接收文件失败", c)
 		return
 	}
 	err, file = service.UploadFile(header, noSave) // 文件上传后拿到文件路径
 	if err != nil {
-		global.SYS_LOG.Error("修改数据库链接失败!", zap.Any("err", err))
+		global.LOG.Error("修改数据库链接失败!", zap.Any("err", err))
 		response.FailWithMessage("修改数据库链接失败", c)
 		return
 	}

@@ -28,18 +28,17 @@ func Gorm() *gorm.DB {
 func MysqlTables(db *gorm.DB) {
 	err := db.Set("gorm:table_options", "ENGINE=InnoDB").AutoMigrate(
 		model.SysUser{},
-		model.JwtBlacklist{},
-		model.SysOperationRecord{},
+		model.EvnJwtBlacklist{},
 		model.EvnNote{},
 		model.EvnNotebook{},
 		model.EvnHistory{},
-		model.FileUpload{},
+		model.EvnUpload{},
 	)
 	if err != nil {
-		global.SYS_LOG.Error("register table failed", zap.Any("err", err))
+		global.LOG.Error("register table failed", zap.Any("err", err))
 		os.Exit(0)
 	}
-	global.SYS_LOG.Info("register table success")
+	global.LOG.Info("register table success")
 }
 
 //@function: GormMysql
@@ -47,7 +46,7 @@ func MysqlTables(db *gorm.DB) {
 //@return: *gorm.DB
 
 func GormMysql() *gorm.DB {
-	m := global.SYS_CONFIG.Mysql
+	m := global.CONFIG.Mysql
 	if m.Dbname == "" {
 		return nil
 	}
@@ -79,7 +78,7 @@ func GormMysql() *gorm.DB {
 
 func gormConfig() *gorm.Config {
 	config := &gorm.Config{DisableForeignKeyConstraintWhenMigrating: true}
-	switch global.SYS_CONFIG.Mysql.LogMode {
+	switch global.CONFIG.Mysql.LogMode {
 	case "silent", "Silent":
 		config.Logger = internal.Default.LogMode(logger.Silent)
 	case "error", "Error":

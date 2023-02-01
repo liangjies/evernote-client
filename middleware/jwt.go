@@ -7,6 +7,7 @@ import (
 	"evernote-client/model/request"
 	"evernote-client/model/response"
 	"evernote-client/service"
+	"golang.org/x/sync/singleflight"
 	"strconv"
 	"time"
 
@@ -15,6 +16,8 @@ import (
 	"github.com/go-redis/redis"
 	"go.uber.org/zap"
 )
+
+var concurrency = &singleflight.Group{}
 
 func JWTAuth() gin.HandlerFunc {
 	return func(c *gin.Context) {
@@ -26,7 +29,7 @@ func JWTAuth() gin.HandlerFunc {
 			return
 		}
 		// 黑名单模式
-		if !global.SYS_CONFIG.System.UseMultipoint {
+		if !global.CONFIG.System.UseMultipoint {
 			if service.IsBlacklist(token) {
 				response.FailWithDetailed(gin.H{"reload": true}, "您的帐户异地登陆或令牌失效", c)
 				c.Abort()
@@ -49,7 +52,7 @@ func JWTAuth() gin.HandlerFunc {
 			return
 		}
 		// 多点模式查询Redis
-		if global.SYS_CONFIG.System.UseMultipoint {
+		if global.CONFIG.System.UseMultipoint {
 			if err, jwtStr := service.GetRedisJWT(claims.UUID.String()); err == redis.Nil {
 				response.FailWithDetailed(gin.H{"reload": true}, "您的帐户异地登陆或令牌失效", c)
 				c.Abort()
@@ -63,9 +66,9 @@ func JWTAuth() gin.HandlerFunc {
 			}
 		}
 
-		if !global.SYS_CONFIG.System.UseMultipoint {
+		if !global.CONFIG.System.UseMultipoint {
 			if err, _ = service.FindUserByUuid(claims.UUID.String()); err != nil {
-				_ = service.JsonInBlacklist(model.JwtBlacklist{Jwt: token})
+				_ = service.JsonInBlacklist(model.EvnJwtBlacklist{Jwt: token})
 				response.FailWithDetailed(gin.H{"reload": true}, err.Error(), c)
 				c.Abort()
 			}
@@ -73,17 +76,17 @@ func JWTAuth() gin.HandlerFunc {
 
 		// token换新
 		if claims.ExpiresAt-time.Now().Unix() < claims.BufferTime {
-			claims.ExpiresAt = time.Now().Unix() + global.SYS_CONFIG.JWT.ExpiresTime
+			claims.ExpiresAt = time.Now().Unix() + global.CONFIG.JWT.ExpiresTime
 			newToken, _ := j.CreateTokenByOldToken(token, *claims)
 			newClaims, _ := j.ParseToken(newToken)
 			c.Header("new-token", newToken)
 			c.Header("new-expires-at", strconv.FormatInt(newClaims.ExpiresAt, 10))
-			if global.SYS_CONFIG.System.UseMultipoint {
+			if global.CONFIG.System.UseMultipoint {
 				err, RedisJwtToken := service.GetRedisJWT(newClaims.UUID.String())
 				if err != nil {
-					global.SYS_LOG.Error("get redis jwt failed", zap.Any("err", err))
+					global.LOG.Error("get redis jwt failed", zap.Any("err", err))
 				} else { // 当之前的取成功时才进行拉黑操作
-					_ = service.JsonInBlacklist(model.JwtBlacklist{Jwt: RedisJwtToken})
+					_ = service.JsonInBlacklist(model.EvnJwtBlacklist{Jwt: RedisJwtToken})
 				}
 				// 无论如何都要记录当前的活跃状态
 				_ = service.SetRedisJWT(newToken, newClaims.Username)
@@ -107,7 +110,7 @@ var (
 
 func NewJWT() *JWT {
 	return &JWT{
-		[]byte(global.SYS_CONFIG.JWT.SigningKey),
+		[]byte(global.CONFIG.JWT.SigningKey),
 	}
 }
 
@@ -119,7 +122,7 @@ func (j *JWT) CreateToken(claims request.CustomClaims) (string, error) {
 
 // CreateTokenByOldToken 旧token 换新token 使用归并回源避免并发问题
 func (j *JWT) CreateTokenByOldToken(oldToken string, claims request.CustomClaims) (string, error) {
-	v, err, _ := global.SYS_Concurrency_Control.Do("JWT:"+oldToken, func() (interface{}, error) {
+	v, err, _ := concurrency.Do("JWT:"+oldToken, func() (interface{}, error) {
 		return j.CreateToken(claims)
 	})
 	return v.(string), err

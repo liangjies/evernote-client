@@ -24,7 +24,7 @@ func RevertNote(c *gin.Context) {
 	nid := uint(oid)
 
 	if err := service.RevertNote(nid, getUserID(c)); err != nil {
-		global.SYS_LOG.Error("恢复失败!", zap.Any("err", err))
+		global.LOG.Error("恢复失败!", zap.Any("err", err))
 		response.FailWithMessage("恢复失败", c)
 	} else {
 		response.OkWithMessage("恢复成功", c)
@@ -44,9 +44,11 @@ func DeleteTrash(c *gin.Context) {
 	nid := uint(oid)
 
 	if err := service.DeleteTrash(nid, getUserID(c)); err != nil {
-		global.SYS_LOG.Error("删除失败!", zap.Any("err", err))
+		global.LOG.Error("删除失败!", zap.Any("err", err))
 		response.FailWithMessage("删除失败！"+err.Error(), c)
 	} else {
+		// 更新笔记本缓存
+		_ = UpdateNotebookRedis(getUserID(c))
 		response.OkWithMessage("删除成功", c)
 	}
 }
@@ -57,7 +59,7 @@ func DeleteTrash(c *gin.Context) {
 // @Router /trash/all [get]
 func GetTrashs(c *gin.Context) {
 	if err, list, total := service.GetTrashs(getUserID(c)); err != nil {
-		global.SYS_LOG.Error("获取失败!", zap.Any("err", err))
+		global.LOG.Error("获取失败!", zap.Any("err", err))
 		response.FailWithMessage("获取失败", c)
 	} else {
 		response.OkWithDetailed(response.PageResult{
@@ -80,7 +82,7 @@ func GetTrashById(c *gin.Context) {
 	nid := uint(oid)
 
 	if err, list := service.GetTrashById(nid, getUserID(c)); err != nil {
-		global.SYS_LOG.Error("获取失败!", zap.Any("err", err))
+		global.LOG.Error("获取失败!", zap.Any("err", err))
 		response.FailWithMessage("获取失败", c)
 	} else {
 		response.OkWithDetailed(response.NoteResult{
