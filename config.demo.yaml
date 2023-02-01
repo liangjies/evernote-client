@@ -1,0 +1,62 @@
+system:
+  env: public
+  addr: 8888
+  db-type: mysql
+  oss-type: qiniu
+  use-redis: true
+  use-multipoint: true
+  version-max: 20
+  
+mysql:
+  path: 127.0.0.1:3306
+  config: charset=utf8mb4&parseTime=True&loc=Local
+  db-name: evernote
+  username: evernote
+  password: 123456
+  max-idle-conns: 0
+  max-open-conns: 0
+  log-mode: "info"
+  log-zap: false
+captcha:
+  key-long: 4
+  img-width: 120
+  img-height: 40
+zap:
+  level: info
+  format: console
+  prefix: '[EVERNOTE]'
+  director: log
+  link-name: latest_log
+  showLine: true
+  encode-level: LowercaseColorLevelEncoder
+  stacktrace-key: stacktrace
+  log-in-console: true
+redis:
+  db: 0
+  addr: 127.0.0.1:6379
+  password: ""
+  prefix: "evernote:"
+
+jwt:
+  signing-key: qmtPlus
+  expires-time: 604800
+  buffer-time: 86400
+local:
+  path: uploads/file
+qiniu:
+  zone: ZoneBeimei
+  bucket: "backup"
+  img-path: "http://img.icewx.com"
+  path-prefix: "evernote"
+  use-https: false
+  access-key: ""
+  secret-key: ""
+  use-cdn-domains: false
+  
+tencent-cos:
+  bucket: ""
+  region: ""
+  secret-id: ""
+  secret-key: ""
+  base-url: ""
+  path-prefix: ""
