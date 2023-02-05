@@ -47,7 +47,7 @@ func UpdateNote(n model.EvnNote, uid uint) (err error) {
 	if n.NotebookId != 0 {
 		err = db.Select("title", "content", "notebook_id", "snippet").Where("id = ? AND create_by = ? AND del_flag=0", n.ID, uid).First(&note).Updates(&n).Error
 	} else {
-		err = db.Select("content").Where("id = ? AND create_by = ? AND del_flag=0", n.ID, uid).First(&note).Updates(&n).Error
+		err = db.Where("id = ? AND create_by = ? AND del_flag=0", n.ID, uid).First(&note).Updates(&n).Error
 	}
 	// 保存历史记录
 	if count == 0 {
@@ -143,7 +143,7 @@ func GetNoteById(nid uint, uid uint) (err error, list interface{}) {
 func GetAllNotes(uid uint) (err error, list interface{}, total int64) {
 	var noteList []model.EvnNote
 	db := global.DB.Model(&model.EvnNote{})
-	err = db.Select("CreatedAt", "UpdatedAt", "ID", "Title", "Snippet").Where("create_by = ? AND del_flag=0", uid).Order("updated_at desc").Find(&noteList).Error
+	err = db.Select("CreatedAt", "UpdatedAt", "ID", "Title", "Snippet", "type").Where("create_by = ? AND del_flag=0", uid).Order("updated_at desc").Find(&noteList).Error
 	if err != nil {
 		return err, noteList, total
 	}
@@ -168,7 +168,7 @@ func SearchNote(SearchKey string, NotebookId uint, uid uint) (err error, list in
 		db.Where("title like ? OR content like ?", "%"+SearchKey+"%", "%"+SearchKey+"%")
 	}
 
-	err = db.Select("CreatedAt", "UpdatedAt", "ID", "Title", "Snippet").Order("updated_at desc").Find(&noteList).Error
+	err = db.Select("CreatedAt", "UpdatedAt", "ID", "Title", "Snippet", "Type").Order("updated_at desc").Find(&noteList).Error
 	if err != nil {
 		return err, noteList, total
 	}

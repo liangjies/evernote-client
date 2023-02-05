@@ -1,7 +1,7 @@
 package request
 
 import (
-	"github.com/golang-jwt/jwt"
+	"github.com/dgrijalva/jwt-go"
 	uuid "github.com/satori/go.uuid"
 )
 

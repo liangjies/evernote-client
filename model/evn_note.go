@@ -12,4 +12,5 @@ type EvnNote struct {
 	NotebookId uint   `json:"notebookId" gorm:"column:notebook_id;comment:笔记所属笔记本"`
 	CreateBy   uint   `json:"-" gorm:"index;column:create_by;comment:创建人"`
 	DelFlag    bool   `json:"-" gorm:"index;column:del_flag;comment:回收站删除标记"`
+	Type       uint8  `json:"type" gorm:"column:type;default:1;comment:笔记类型 1:普通 2:markdown"`
 }

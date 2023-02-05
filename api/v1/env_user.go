@@ -9,9 +9,9 @@ import (
 	"evernote-client/service"
 	"evernote-client/utils"
 
+	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
 	"github.com/go-redis/redis"
-	"github.com/golang-jwt/jwt"
 	"go.uber.org/zap"
 
 	"time"

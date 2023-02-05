@@ -7,11 +7,10 @@ import (
 	"strings"
 )
 
-//@function: FileMove
-//@description: 文件移动供外部调用
-//@param: src string, dst string(src: 源位置,绝对路径or相对路径, dst: 目标位置,绝对路径or相对路径,必须为文件夹)
-//@return: err error
-
+// @function: FileMove
+// @description: 文件移动供外部调用
+// @param: src string, dst string(src: 源位置,绝对路径or相对路径, dst: 目标位置,绝对路径or相对路径,必须为文件夹)
+// @return: err error
 func FileMove(src string, dst string) (err error) {
 	if dst == "" {
 		return nil
@@ -41,11 +40,10 @@ Redirect:
 	return os.Rename(src, dst)
 }
 
-//@function: TrimSpace
-//@description: 去除结构体空格
-//@param: target interface (target: 目标结构体,传入必须是指针类型)
-//@return: null
-
+// @function: TrimSpace
+// @description: 去除结构体空格
+// @param: target interface (target: 目标结构体,传入必须是指针类型)
+// @return: null
 func TrimSpace(target interface{}) {
 	t := reflect.TypeOf(target)
 	if t.Kind() != reflect.Ptr {
