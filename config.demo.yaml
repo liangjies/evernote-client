@@ -60,3 +60,11 @@ tencent-cos:
   secret-key: ""
   base-url: ""
   path-prefix: ""
+
+mail:
+  port: 22
+  from: ""
+  host: ""
+  is-ssl: false
+  secret: ""
+  nickname: ""
