@@ -3,7 +3,6 @@ package v1
 import (
 	"evernote-client/global"
 	"evernote-client/model/response"
-
 	"github.com/gin-gonic/gin"
 	"github.com/mojocn/base64Captcha"
 	"go.uber.org/zap"

@@ -11,10 +11,12 @@ type Register struct {
 
 // User login structure
 type Login struct {
-	Username  string `json:"username"`  // 用户名
-	Password  string `json:"password"`  // 密码
-	Captcha   string `json:"captcha"`   // 验证码
-	CaptchaId string `json:"captchaId"` // 验证码ID
+	Username string `json:"username"` // 用户名
+	Password string `json:"password"` // 密码
+	RandStr  string `form:"randstr"`
+	Ticket   string `form:"ticket"`
+	//Captcha   string `json:"captcha"`   // 验证码
+	//CaptchaId string `json:"captchaId"` // 验证码ID
 }
 
 // 用户修改密码
