@@ -2,8 +2,10 @@ package service
 
 import (
 	"encoding/json"
+	"evernote-client/global"
 	"fmt"
 	"github.com/imroc/req/v3"
+	"gopkg.in/gomail.v2"
 	"math/rand"
 	"strings"
 	"time"
@@ -41,4 +43,31 @@ func CheckTicket(ticket, randstr string) bool {
 		return true
 	}
 	return false
+}
+
+func SendVerifyCode(mail string) (err error) {
+	randNum := fmt.Sprintf("%06v", rand.New(rand.NewSource(time.Now().UnixNano())).Int31n(1000000))
+	if err = SetRedis(fmt.Sprintf("verify:%s", mail), randNum, 10*60); err != nil {
+		return err
+	}
+	if err = Send(mail, randNum); err != nil {
+		return err
+	}
+	return err
+}
+
+// Send 发送邮件
+func Send(to string, code string) (err error) {
+	m := gomail.NewMessage()
+	m.SetHeader("From", global.CONFIG.Mail.From, global.CONFIG.Mail.Nickname)
+	m.SetHeader("To", to)
+	m.SetHeader("Subject", fmt.Sprintf("用户注册验证码：%s - note.icewx.com", code))
+	m.SetBody("text/html", fmt.Sprintf("您注册的验证码为：%s，10分钟内有效", code))
+	mailer := gomail.NewDialer(global.CONFIG.Mail.Host, global.CONFIG.Mail.Port, global.CONFIG.Mail.From, global.CONFIG.Mail.Secret)
+	if err = mailer.DialAndSend(m); err != nil {
+		global.LOG.Error(err.Error())
+		return err
+	}
+
+	return nil
 }

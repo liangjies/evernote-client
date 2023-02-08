@@ -2,11 +2,13 @@ package request
 
 // User register structure
 type Register struct {
-	Username    string `json:"userName"`
-	Password    string `json:"passWord"`
-	NickName    string `json:"nickName" gorm:"default:'QMPlusUser'"`
-	HeaderImg   string `json:"headerImg" gorm:"default:'http://www.henrongyi.top/avatar/lufu.jpg'"`
-	AuthorityId string `json:"authorityId" gorm:"default:888"`
+	Username   string `json:"userName"`
+	Password   string `json:"passWord"`
+	Email      string `json:"email"`
+	VerifyCode string `json:"verifyCode"` // 验证码
+	//NickName    string `json:"nickName" gorm:"default:'QMPlusUser'"`
+	//HeaderImg   string `json:"headerImg" gorm:"default:'http://www.henrongyi.top/avatar/lufu.jpg'"`
+	//AuthorityId string `json:"authorityId" gorm:"default:888"`
 }
 
 // User login structure
@@ -39,6 +41,13 @@ type SetUserAuth struct {
 
 // 用户修改邮箱
 type ChangeEmail struct {
-	PassWord string `json:"password"` // 用户密码
-	Email    string `json:"email"`    // 邮箱
+	PassWord   string `json:"password"`   // 用户密码
+	VerifyCode string `json:"verifyCode"` // 验证码
+	Email      string `json:"email"`      // 邮箱
+}
+
+type SendVerifyCodeReq struct {
+	Email   string `json:"email"` // 邮箱
+	RandStr string `form:"randstr"`
+	Ticket  string `form:"ticket"`
 }

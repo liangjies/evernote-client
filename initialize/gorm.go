@@ -27,7 +27,7 @@ func Gorm() *gorm.DB {
 
 func MysqlTables(db *gorm.DB) {
 	err := db.Set("gorm:table_options", "ENGINE=InnoDB").AutoMigrate(
-		model.SysUser{},
+		model.EvnUser{},
 		model.EvnJwtBlacklist{},
 		model.EvnNote{},
 		model.EvnNotebook{},

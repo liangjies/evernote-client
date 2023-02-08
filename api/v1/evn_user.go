@@ -8,11 +8,12 @@ import (
 	"evernote-client/model/response"
 	"evernote-client/service"
 	"evernote-client/utils"
+	"fmt"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
 	"github.com/go-redis/redis"
 	"go.uber.org/zap"
-
+	"strings"
 	"time"
 )
 
@@ -44,7 +45,7 @@ func Login(c *gin.Context) {
 		return
 	}
 	if service.CheckTicket(l.Ticket, l.RandStr) {
-		u := &model.SysUser{Username: l.Username, Password: l.Password}
+		u := &model.EvnUser{Username: l.Username, Password: l.Password}
 		if err, user := service.Login(u); err != nil {
 			global.LOG.Error("登陆失败! 用户名不存在或者密码错误!", zap.Any("err", err))
 			response.FailWithMessage("用户名不存在或者密码错误", c)
@@ -74,7 +75,7 @@ func Logout(c *gin.Context) {
 }
 
 // 登录以后签发jwt
-func tokenNext(c *gin.Context, user model.SysUser) {
+func tokenNext(c *gin.Context, user model.EvnUser) {
 	// 多点登录
 	if global.CONFIG.System.UseMultipoint {
 		if err, jwtStr := service.GetRedisJWT(user.UUID.String()); err != redis.Nil {
@@ -155,7 +156,7 @@ func tokenNext(c *gin.Context, user model.SysUser) {
 // @Success 200 {string} string "{"success":true,"data":{},"msg":"修改成功"}"
 // @Router /user/nickName [PATCH]
 func UpdateNickName(c *gin.Context) {
-	var user model.SysUser
+	var user model.EvnUser
 	err := c.ShouldBindJSON(&user)
 	if err != nil || user.NickName == "" {
 		response.FailWithMessage("参数错误", c)
@@ -225,11 +226,46 @@ func UpdateEmail(c *gin.Context) {
 		response.FailWithMessage("参数错误", c)
 		return
 	}
-
+	redisKey := fmt.Sprintf("verify:%s", user.Email)
+	err, value := service.GetRedis(redisKey)
+	if err != nil || value != strings.TrimSpace(user.VerifyCode) {
+		response.FailWithMessage("验证码错误", c)
+		return
+	}
+	_ = service.DelRedis(redisKey)
 	if err := service.UpdateEmail(getUserID(c), user); err != nil {
 		global.LOG.Error("修改失败!", zap.Any("err", err))
 		response.FailWithMessage("修改失败，密码与当前账户不符", c)
 	} else {
 		response.OkWithMessage("修改成功", c)
+	}
+}
+
+// @Tags SysUser
+// @Summary 用户注册账号
+// @Produce  application/json
+// @Param data body systemReq.Register true "用户名, 昵称, 密码, 角色ID"
+// @Success 200 {object} response.Response{data=systemRes.SysUserResponse,msg=string} "用户注册账号,返回包括用户信息"
+// @Router /user/register [post]
+func Register(c *gin.Context) {
+	var r request.Register
+	_ = c.ShouldBindJSON(&r)
+	if err := utils.Verify(r, utils.RegisterVerify); err != nil {
+		response.FailWithMessage(err.Error(), c)
+		return
+	}
+	redisKey := fmt.Sprintf("verify:%s", r.Email)
+	err, value := service.GetRedis(redisKey)
+	if err != nil || value != strings.TrimSpace(r.VerifyCode) {
+		response.FailWithMessage("验证码错误", c)
+		return
+	}
+	_ = service.DelRedis(redisKey)
+	err = service.Register(r)
+	if err != nil {
+		global.LOG.Error("注册失败!", zap.Error(err))
+		response.FailWithMessage("注册失败 "+err.Error(), c)
+	} else {
+		response.OkWithMessage("注册成功", c)
 	}
 }

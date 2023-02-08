@@ -30,6 +30,7 @@ func Routers() *gin.Engine {
 	PublicGroup := Router.Group("")
 	{
 		router.InitBaseRouter(PublicGroup) // 注册基础功能路由 不做鉴权
+
 	}
 
 	PrivateGroup := Router.Group("")

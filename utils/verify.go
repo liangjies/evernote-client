@@ -7,7 +7,7 @@ var (
 	LoginVerify     = Rules{"CaptchaId": {NotEmpty()}, "Captcha": {NotEmpty()}, "Username": {NotEmpty()}, "Password": {NotEmpty()}}
 
 	IdVerify             = Rules{"ID": {NotEmpty()}}
-	RegisterVerify       = Rules{"Username": {NotEmpty()}, "NickName": {NotEmpty()}, "Password": {NotEmpty()}, "AuthorityId": {NotEmpty()}}
+	RegisterVerify       = Rules{"Username": {NotEmpty()}, "Password": {NotEmpty()}, "Email": {NotEmpty()}}
 	PageInfoVerify       = Rules{"Page": {NotEmpty()}, "PageSize": {NotEmpty()}}
 	ChangePasswordVerify = Rules{"Username": {NotEmpty()}, "Password": {NotEmpty()}, "NewPassword": {NotEmpty()}}
 )

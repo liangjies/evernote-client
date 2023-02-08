@@ -2,7 +2,9 @@ package v1
 
 import (
 	"evernote-client/global"
+	"evernote-client/model/request"
 	"evernote-client/model/response"
+	"evernote-client/service"
 	"github.com/gin-gonic/gin"
 	"github.com/mojocn/base64Captcha"
 	"go.uber.org/zap"
@@ -31,5 +33,20 @@ func Captcha(c *gin.Context) {
 			CaptchaId: id,
 			PicPath:   b64s,
 		}, "验证码获取成功", c)
+	}
+}
+
+func SendVerifyCode(c *gin.Context) {
+	var l request.SendVerifyCodeReq
+	_ = c.ShouldBindJSON(&l)
+	if service.CheckTicket(l.Ticket, l.RandStr) {
+		if err := service.SendVerifyCode(l.Email); err != nil {
+			global.LOG.Error("验证码发送失败!", zap.Any("err", err))
+			response.FailWithMessage("验证码发送失败", c)
+		} else {
+			response.OkWithMessage("验证码发送成功", c)
+		}
+	} else {
+		response.FailWithMessage("验证码错误", c)
 	}
 }
