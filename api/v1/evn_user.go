@@ -9,7 +9,6 @@ import (
 	"evernote-client/service"
 	"evernote-client/utils"
 	"fmt"
-	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
 	"github.com/go-redis/redis"
 	"go.uber.org/zap"

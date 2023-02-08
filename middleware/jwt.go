@@ -11,9 +11,9 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
 	"github.com/go-redis/redis"
+	"github.com/golang-jwt/jwt/v4"
 	"go.uber.org/zap"
 )
 
