@@ -1,7 +1,9 @@
 # evernote-client
 
 #### 介绍
-笔记应用，后端部分，具有搜索笔记、富媒体编辑器、历史记录、笔记标签等功能。
+笔记应用，前后端分离，后端部分，具有搜索笔记、富媒体编辑器、历史记录、笔记标签等功能。
+
+前端部分：[https://github.com/liangjies/vue3-evernote](https://github.com/liangjies/vue3-evernote)
 
 #### 软件架构
 Gin、Gorm、MySQL、Redis、JWT、Zap
