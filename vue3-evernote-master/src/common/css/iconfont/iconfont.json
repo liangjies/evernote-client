@@ -1,0 +1,23 @@
+{
+  "id": "",
+  "name": "",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "15534132",
+      "name": "ic-alphabetical-sorting-za",
+      "font_class": "ic-alphabetical-sorting-za",
+      "unicode": "e744",
+      "unicode_decimal": 59204
+    },
+    {
+      "icon_id": "15534142",
+      "name": "ic-alphabetical-sorting-az",
+      "font_class": "ic-alphabetical-sorting-az",
+      "unicode": "e745",
+      "unicode_decimal": 59205
+    }
+  ]
+}

@@ -6,6 +6,7 @@ import (
 	"evernote-client/utils"
 	"io"
 	"mime/multipart"
+	"net/http"
 	"os"
 	"path"
 	"strings"
@@ -26,8 +27,19 @@ type Local struct{}
 //@return: string, string, error
 
 func (*Local) UploadFile(file *multipart.FileHeader) (string, string, error) {
+	// 简单大小限制：默认 10MB
+	const maxSize = 10 * 1024 * 1024
+	if file.Size > maxSize {
+		return "", "", errors.New("file too large: max 10MB")
+	}
+	// 读取并校验后缀与 MIME（弱校验，强校验建议读取魔数或专门库）
 	// 读取文件后缀
 	ext := path.Ext(file.Filename)
+	lower := strings.ToLower(ext)
+	allowedExt := map[string]bool{".jpg": true, ".jpeg": true, ".png": true, ".gif": true, ".bmp": true, ".webp": true, ".svg": false, ".pdf": true, ".txt": true, ".md": true}
+	if ok, exist := allowedExt[lower]; !exist || !ok {
+		return "", "", errors.New("unsupported file type")
+	}
 	// 读取文件名并加密
 	name := strings.TrimSuffix(file.Filename, ext)
 	name = utils.MD5V([]byte(name))
@@ -48,6 +60,22 @@ func (*Local) UploadFile(file *multipart.FileHeader) (string, string, error) {
 		return "", "", errors.New("function file.Open() Filed, err:" + openError.Error())
 	}
 	defer f.Close() // 创建文件 defer 关闭
+
+	// 通过 content-type 做一层额外校验（非强保证）
+	// 注意：multipart 提供的 Header 可能被伪造，必要时读取前 512 字节 sniff
+	if ct := file.Header.Get("Content-Type"); ct != "" {
+		// 允许的通用类型
+		if !strings.HasPrefix(ct, "image/") && ct != "application/pdf" && ct != "text/plain" && ct != "text/markdown" {
+			// 如果 Header 没给或给错，尝试 sniff 一下
+			buf := make([]byte, 512)
+			n, _ := f.Read(buf)
+			_, _ = f.Seek(0, 0)
+			sniff := http.DetectContentType(buf[:n])
+			if !strings.HasPrefix(sniff, "image/") && sniff != "application/pdf" && sniff != "text/plain" {
+				return "", "", errors.New("invalid content type")
+			}
+		}
+	}
 
 	out, createErr := os.Create(p)
 	if createErr != nil {

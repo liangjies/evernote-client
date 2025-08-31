@@ -9,12 +9,14 @@ import (
 	"evernote-client/service"
 	"evernote-client/utils"
 	"fmt"
+	"strings"
+	"time"
+
 	"github.com/gin-gonic/gin"
 	"github.com/go-redis/redis"
 	"github.com/golang-jwt/jwt/v4"
+	"github.com/mojocn/base64Captcha"
 	"go.uber.org/zap"
-	"strings"
-	"time"
 )
 
 type User struct {
@@ -40,20 +42,27 @@ type AuthLogin struct {
 func Login(c *gin.Context) {
 	var l request.Login
 	_ = c.ShouldBindJSON(&l)
+
+	// 添加调试日志
+	global.LOG.Info("登录请求参数", zap.String("username", l.Username), zap.String("ticket", l.Ticket), zap.String("randstr", l.RandStr))
+
 	if err := utils.Verify(l, utils.LoginVerify); err != nil {
+		global.LOG.Error("参数验证失败", zap.String("error", err.Error()))
 		response.FailWithMessage(err.Error(), c)
 		return
 	}
-	if service.CheckTicket(l.Ticket, l.RandStr) {
-		u := &model.EvnUser{Username: l.Username, Password: l.Password}
-		if err, user := service.Login(u); err != nil {
-			global.LOG.Error("登陆失败! 用户名不存在或者密码错误!", zap.Any("err", err))
-			response.FailWithMessage("用户名不存在或者密码错误", c)
-		} else {
-			tokenNext(c, *user)
-		}
-	} else {
+
+	if !base64Captcha.DefaultMemStore.Verify(l.CaptchaId, l.Captcha, true) {
 		response.FailWithMessage("验证码错误", c)
+		return
+	}
+
+	u := &model.EvnUser{Username: l.Username, Password: l.Password}
+	if err, user := service.Login(u); err != nil {
+		global.LOG.Error("登陆失败! 用户名不存在或者密码错误!", zap.Any("err", err))
+		response.FailWithMessage("用户名不存在或者密码错误", c)
+	} else {
+		tokenNext(c, *user)
 	}
 }
 

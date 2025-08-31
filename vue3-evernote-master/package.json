@@ -1,0 +1,54 @@
+{
+  "name": "vue-evernote-master",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "serve": "vite --host --mode development",
+    "build": "vite build --mode production",
+    "limit-build": "npm install increase-memory-limit-fixbug cross-env -g && npm run fix-memory-limit && node ./limit && npm run build",
+    "preview": "vite preview",
+    "fix-memory-limit": "cross-env LIMIT=4096 increase-memory-limit"
+  },
+  "dependencies": {
+    "@element-plus/icons-vue": "^2.0.10",
+    "@tinymce/tinymce-vue": "^4",
+    "@vavt/md-editor-extension": "^2.0.0",
+    "axios": "^0.26.0",
+    "element-plus": "^2.2.29",
+    "less": "^4.1.3",
+    "less-loader": "^11.0.0",
+    "md-editor-v3": "^2.9.0",
+    "turndown": "^7.1.1",
+    "turndown-plugin-gfm": "^1.0.2",
+    "vue": "^3.2.13",
+    "vue-router": "^4.0.13",
+    "vuex": "^4.0.2",
+    "vuex-persist": "^3.1.3"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^2.3.3",
+    "eslint": "8",
+    "eslint-plugin-vue": "8",
+    "vite": "^4.1.1"
+  },
+  "eslintConfig": {
+    "root": true,
+    "env": {
+      "node": true
+    },
+    "extends": [
+      "plugin:vue/vue3-essential",
+      "eslint:recommended"
+    ],
+    "parserOptions": {
+      "parser": "@babel/eslint-parser"
+    },
+    "rules": {}
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead",
+    "not ie 11"
+  ]
+}

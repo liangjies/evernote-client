@@ -1,6 +1,7 @@
 package service
 
 import (
+	"context"
 	"evernote-client/global"
 	"time"
 )
@@ -11,7 +12,8 @@ import (
 // @return: err error, redisJWT string
 func GetRedis(key string) (err error, value string) {
 	prefix := global.CONFIG.Redis.Prefix
-	value, err = global.REDIS.Get(prefix + key).Result()
+	ctx := context.Background()
+	value, err = global.REDIS.Get(ctx, prefix+key).Result()
 	return err, value
 }
 
@@ -21,9 +23,10 @@ func GetRedis(key string) (err error, value string) {
 // @return: err error
 func SetRedis(key string, value string, expTime uint) (err error) {
 	prefix := global.CONFIG.Redis.Prefix
+	ctx := context.Background()
 	// 此处过期时间等于jwt过期时间
 	timer := time.Duration(expTime) * time.Second
-	err = global.REDIS.Set(prefix+key, value, timer).Err()
+	err = global.REDIS.Set(ctx, prefix+key, value, timer).Err()
 	return err
 }
 
@@ -33,6 +36,7 @@ func SetRedis(key string, value string, expTime uint) (err error) {
 // @return: err error
 func DelRedis(key string) (err error) {
 	prefix := global.CONFIG.Redis.Prefix
-	err = global.REDIS.Del(prefix + key).Err()
+	ctx := context.Background()
+	err = global.REDIS.Del(ctx, prefix+key).Err()
 	return err
 }

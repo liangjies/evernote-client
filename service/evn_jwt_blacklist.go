@@ -1,6 +1,7 @@
 package service
 
 import (
+	"context"
 	"errors"
 	"evernote-client/global"
 	"evernote-client/model"
@@ -37,7 +38,8 @@ func IsBlacklist(jwt string) bool {
 
 func GetRedisJWT(userName string) (err error, redisJWT string) {
 	prefix := global.CONFIG.Redis.Prefix
-	redisJWT, err = global.REDIS.Get(prefix + userName).Result()
+	ctx := context.Background()
+	redisJWT, err = global.REDIS.Get(ctx, prefix+userName).Result()
 	return err, redisJWT
 }
 
@@ -48,8 +50,9 @@ func GetRedisJWT(userName string) (err error, redisJWT string) {
 
 func SetRedisJWT(jwt string, userName string) (err error) {
 	prefix := global.CONFIG.Redis.Prefix
+	ctx := context.Background()
 	// 此处过期时间等于jwt过期时间
 	timer := time.Duration(global.CONFIG.JWT.ExpiresTime) * time.Second
-	err = global.REDIS.Set(prefix+userName, jwt, timer).Err()
+	err = global.REDIS.Set(ctx, prefix+userName, jwt, timer).Err()
 	return err
 }

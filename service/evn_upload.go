@@ -25,9 +25,9 @@ func Upload(file model.EvnUpload) error {
 func UploadFile(header *multipart.FileHeader, noSave string) (err error, file model.EvnUpload) {
 	oss := upload.NewOss()
 	filePath, key, uploadErr := oss.UploadFile(header)
-	if uploadErr != nil {
-		panic(err)
-	}
+    if uploadErr != nil {
+        return uploadErr, file
+    }
 	if noSave == "0" {
 		s := strings.Split(header.Filename, ".")
 		f := model.EvnUpload{

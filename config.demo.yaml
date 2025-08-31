@@ -11,8 +11,8 @@ mysql:
   path: 127.0.0.1:3306
   config: charset=utf8mb4&parseTime=True&loc=Local
   db-name: evernote
-  username: evernote
-  password: 123456
+  username: root
+  password: wnasuicide18
   max-idle-conns: 0
   max-open-conns: 0
   log-mode: "info"
@@ -62,9 +62,9 @@ tencent-cos:
   path-prefix: ""
 
 mail:
-  port: 22
-  from: ""
-  host: ""
-  is-ssl: false
+  port: 465
+  from: "3511635071@qq.com"
+  host: "smtp.qq.com"
+  is-ssl: true
   secret: ""
-  nickname: ""
+  nickname: "LukXey" 

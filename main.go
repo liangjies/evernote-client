@@ -18,5 +18,7 @@ func main() {
 		defer db.Close()
 	}
 
+	initialize.Redis() // 初始化Redis连接
+
 	core.RunServer()
 }
